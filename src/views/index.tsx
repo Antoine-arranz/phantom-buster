@@ -1,12 +1,13 @@
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
-import Main from "../components/Layout/Main";
+import { RouterProvider } from "react-router-dom";
+import router from ".././router/router";
 
 function App() {
   return (
     <div>
       <Header></Header>
-      <Main> Technical test Phantom Buster</Main>
+      <RouterProvider router={router} />
       <Footer></Footer>
     </div>
   );
