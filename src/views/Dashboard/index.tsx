@@ -1,5 +1,13 @@
+import Section from "../../components/Layout/Section";
+
 function Dashboard() {
-  return <div>dashboard</div>;
+  return (
+    <Section>
+      <div>
+        <h1>Dashboard</h1>
+      </div>
+    </Section>
+  );
 }
 
 export default Dashboard;
