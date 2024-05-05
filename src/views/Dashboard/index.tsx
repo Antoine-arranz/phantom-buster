@@ -16,14 +16,12 @@ enum ActivityState {
   InError = "In Error",
 }
 const Dashboard = () => {
-  console.log("icicici Dashboard");
   const [phantomResult, phantomLoading, phantomError] = useApiHook(
     ApiEnum.Phantom
   );
   const [categorieResult, categorieLoading, categorieError] = useApiHook(
     ApiEnum.Categorie
   );
-  console.log("categorieResult", categorieResult);
 
   function createListFromEnum(enumObj: any): string[] {
     const enumKeys = Object.keys(enumObj).filter((key) =>
@@ -37,56 +35,57 @@ const Dashboard = () => {
 
   return (
     <Section>
-      <div>
-        <h1>Dashboard</h1>
-        <div className='mt-9 flex flex-col lg:flex-row lg:gap-10'>
-          <aside className='hidden min-w-[250px] select-none lg:block'>
-            <SearchBar />
-            {launchTypeCategories && (
-              <>
-                <p>Launch type</p>
-                {launchTypeCategories.map((categorie: string) => {
-                  return (
-                    <CategoriesFilter title='Platforms' key={categorie}>
-                      {categorie}
-                    </CategoriesFilter>
-                  );
-                })}
-              </>
-            )}
-            {activityCategories && (
-              <>
-                <p>Activity</p>
-                {activityCategories.map((categorie: string) => {
-                  return (
-                    <CategoriesFilter title='Platforms' key={categorie}>
-                      {categorie}
-                    </CategoriesFilter>
-                  );
-                })}
-              </>
-            )}
-
-            {categorieResult && (
-              <>
-                <p>Platforms</p>
-                {categorieResult.map((categorie: string) => {
-                  return (
-                    <CategoriesFilter title='Platforms' key={categorie}>
-                      {categorie}
-                    </CategoriesFilter>
-                  );
-                })}
-              </>
-            )}
-          </aside>
-          <div className='flex-1'>
-            {phantomResult &&
-              phantomResult.map((phantomCard: any) => {
-                console.log("zaeaa", phantomCard);
-                return <PhantomCard phantomCard={phantomCard}></PhantomCard>;
+      <h1 className='text-3xl font-extrabold'>Dashboard</h1>
+      <div className='mt-9 flex flex-col lg:flex-row lg:gap-10'>
+        <aside className='hidden min-w-[250px] select-none lg:flex lg:flex-col lg:gap-5'>
+          <SearchBar />
+          {phantomResult && categorieResult && (
+            <h2 className='text-md font-bold'>Filters</h2>
+          )}
+          {phantomResult && launchTypeCategories && (
+            <div className='mb-4'>
+              <p className='text-sm font-medium'>Launch type</p>
+              {launchTypeCategories.map((categorie: string) => {
+                return (
+                  <CategoriesFilter title='Platforms' key={categorie}>
+                    {categorie}
+                  </CategoriesFilter>
+                );
               })}
-          </div>
+            </div>
+          )}
+
+          {phantomResult && activityCategories && (
+            <div className='mb-4'>
+              <p className='text-sm font-medium'>Activity</p>
+              {activityCategories.map((categorie: string) => {
+                return (
+                  <CategoriesFilter title='Platforms' key={categorie}>
+                    {categorie}
+                  </CategoriesFilter>
+                );
+              })}
+            </div>
+          )}
+
+          {categorieResult && (
+            <div className='mb-4'>
+              <p className='text-sm font-medium'>Platforms</p>
+              {categorieResult.map((categorie: string) => {
+                return (
+                  <CategoriesFilter title='Platforms' key={categorie}>
+                    {categorie}
+                  </CategoriesFilter>
+                );
+              })}
+            </div>
+          )}
+        </aside>
+        <div className='flex flex-col gap-10 w-full'>
+          {phantomResult &&
+            phantomResult.map((phantomCard: any) => {
+              return <PhantomCard phantomCard={phantomCard}></PhantomCard>;
+            })}
         </div>
       </div>
     </Section>
