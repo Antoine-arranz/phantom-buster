@@ -1,16 +1,43 @@
-import { HTMLAttributes, ReactNode } from "react";
+import CategoriesList from "../CategoriesList/CategoriesList";
+import { useSearchParams } from "react-router-dom";
 
-interface CategoriesFilterProps extends HTMLAttributes<HTMLUListElement> {
-  children: ReactNode;
+export interface CategoriesFilterProps {
+  title: string;
+  categories: Array<string>;
 }
-
-const CategoriesFilter = ({ children }: CategoriesFilterProps) => {
+const CategoriesFilter = ({ title, categories }: CategoriesFilterProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categorySearchParams = searchParams.get(title);
+  const handleItemClick = (index: number, isActive: boolean) => {
+    setSearchParams((prev) => {
+      if (isActive) {
+        prev.delete(title);
+      } else {
+        searchParams.set(title, categories[index]);
+      }
+      return prev;
+    });
+  };
   return (
-    <ul className='list-none'>
-      <li className='mt-1 pl-3 flex list-none hover:cursor-pointer text-lg'>
-        {children}
-      </li>
-    </ul>
+    <div className='mb-4'>
+      <p className='text-sm font-medium'>{title}</p>
+      <ul>
+        {categories.map((categorie: string, index: number) => {
+          return (
+            <CategoriesList
+              onClick={() =>
+                handleItemClick(index, categorySearchParams === categorie)
+              }
+              isActive={categorySearchParams === categorie}
+              key={index}
+              title='Platforms'
+            >
+              {categorie}
+            </CategoriesList>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 

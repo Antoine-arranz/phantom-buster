@@ -1,8 +1,8 @@
-import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
 import Section from "../../components/Layout/Section";
 import PhantomCard from "../../components/PhantomCard/PhantomCard";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { ApiEnum, useApiHook } from "../../hooks/apiHook";
+import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -40,51 +40,37 @@ const Dashboard = () => {
         <aside className='hidden min-w-[250px] select-none lg:flex lg:flex-col lg:gap-5'>
           <SearchBar />
           {phantomResult && categorieResult && (
-            <h2 className='text-md font-bold'>Filters</h2>
+            <div>
+              <h2 className='text-md font-bold'>Filters</h2>
+            </div>
           )}
           {phantomResult && launchTypeCategories && (
-            <div className='mb-4'>
-              <p className='text-sm font-medium'>Launch type</p>
-              {launchTypeCategories.map((categorie: string) => {
-                return (
-                  <CategoriesFilter title='Platforms' key={categorie}>
-                    {categorie}
-                  </CategoriesFilter>
-                );
-              })}
-            </div>
+            <CategoriesFilter
+              title='Launch type'
+              categories={launchTypeCategories}
+            />
           )}
 
           {phantomResult && activityCategories && (
-            <div className='mb-4'>
-              <p className='text-sm font-medium'>Activity</p>
-              {activityCategories.map((categorie: string) => {
-                return (
-                  <CategoriesFilter title='Platforms' key={categorie}>
-                    {categorie}
-                  </CategoriesFilter>
-                );
-              })}
-            </div>
+            <CategoriesFilter
+              title='Activity'
+              categories={activityCategories}
+            />
           )}
 
           {categorieResult && (
-            <div className='mb-4'>
-              <p className='text-sm font-medium'>Platforms</p>
-              {categorieResult.map((categorie: string) => {
-                return (
-                  <CategoriesFilter title='Platforms' key={categorie}>
-                    {categorie}
-                  </CategoriesFilter>
-                );
-              })}
-            </div>
+            <CategoriesFilter title='Platforms' categories={categorieResult} />
           )}
         </aside>
         <div className='flex flex-col gap-10 w-full'>
           {phantomResult &&
-            phantomResult.map((phantomCard: any) => {
-              return <PhantomCard phantomCard={phantomCard}></PhantomCard>;
+            phantomResult.map((phantomCard: any, index: number) => {
+              return (
+                <PhantomCard
+                  key={index}
+                  phantomCard={phantomCard}
+                ></PhantomCard>
+              );
             })}
         </div>
       </div>
