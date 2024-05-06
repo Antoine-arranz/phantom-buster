@@ -8,7 +8,6 @@ export enum ApiEnum {
 }
 
 export const useApiHook = (api: ApiEnum) => {
-  console.log("ici");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<IPhantoms | undefined>(undefined);
   const [error, setError] = useState<any>(undefined);
