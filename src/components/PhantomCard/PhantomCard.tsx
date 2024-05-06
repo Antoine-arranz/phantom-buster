@@ -2,8 +2,13 @@ import { useState } from "react";
 import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
+import { IPhantoms } from "../../data/phantoms";
 
-const PhantomCard = ({ phantomCard }: any) => {
+interface PhantomCardProps {
+  phantomCard: IPhantoms;
+}
+
+const PhantomCard = ({ phantomCard }: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
   const toggleMenu = () => {
@@ -35,8 +40,7 @@ const PhantomCard = ({ phantomCard }: any) => {
       </label>
       {isToggleMenuOpen && (
         <ul
-          className='absolute right-2 ml-4 p-3 rounded-md border-red shadow-xl flex flex-col
-          gap-2'
+          className='shadow-3xl absolute right-2 ml-4 p-4 rounded-md border-red flex flex-col gap-2'
           tabIndex={0}
         >
           <li>
@@ -67,7 +71,7 @@ const PhantomCard = ({ phantomCard }: any) => {
         <h2 className='font-bold text-xl'>{phantomCard.name}</h2>
       </div>
       <div className='h-2/5 flex items-center justify-between space-x-1 '>
-        <div className='flex gap-10 text-secondary-text'>
+        <div className='flex gap-5 text-secondary-text'>
           <Toggle
             className='toggle'
             defaultChecked={isLaunched}
@@ -75,7 +79,9 @@ const PhantomCard = ({ phantomCard }: any) => {
             icons={false}
             id='cheese-status'
           />
-          <p>{isLaunched ? "on" : "off"}</p>
+          <p className={` ${isLaunched ? "text-bcg-filter font-bold" : ""}`}>
+            {isLaunched ? "on" : "off"}
+          </p>{" "}
           <p>{phantomCard.launchType}</p>
         </div>
         <p>slot</p>

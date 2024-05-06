@@ -5,6 +5,7 @@ import { ApiEnum, useApiHook } from "../../hooks/apiHook";
 import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
 import { useSearchParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
+import { IPhantoms } from "../../data/phantoms";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -19,12 +20,12 @@ enum ActivityState {
 }
 const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [phantomResult, phantomLoading, phantomError] = useApiHook(
+  const [phantomResult, error, loading] = useApiHook<IPhantoms[]>(
     ApiEnum.Phantom
   );
-  const [categorieResult, categorieLoading, categorieError] = useApiHook(
-    ApiEnum.Categorie
-  );
+  const [categorieResult, categorieLoading, categorieError] = useApiHook<
+    string[]
+  >(ApiEnum.Categorie);
   function createListFromEnum(enumObj: any): string[] {
     const enumKeys = Object.keys(enumObj).filter((key) =>
       isNaN(Number(enumObj[key]))
@@ -78,7 +79,7 @@ const Dashboard = () => {
         </aside>
         <div className='flex flex-col gap-10 w-full'>
           {phantomResult &&
-            phantomResult.map((phantomCard: any, index: number) => {
+            phantomResult.map((phantomCard, index: number) => {
               return (
                 <PhantomCard
                   key={index}
