@@ -3,6 +3,8 @@ import PhantomCard from "../../components/PhantomCard/PhantomCard";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { ApiEnum, useApiHook } from "../../hooks/apiHook";
 import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
+import { useSearchParams } from "react-router-dom";
+import Button from "../../components/Button/Button";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -16,18 +18,22 @@ enum ActivityState {
   InError = "In Error",
 }
 const Dashboard = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [phantomResult, phantomLoading, phantomError] = useApiHook(
     ApiEnum.Phantom
   );
   const [categorieResult, categorieLoading, categorieError] = useApiHook(
     ApiEnum.Categorie
   );
-
   function createListFromEnum(enumObj: any): string[] {
     const enumKeys = Object.keys(enumObj).filter((key) =>
       isNaN(Number(enumObj[key]))
     );
     return enumKeys.map((key) => enumObj[key]);
+  }
+
+  function onClickClearFilters() {
+    setSearchParams("");
   }
 
   const activityCategories = createListFromEnum(ActivityState);
@@ -40,8 +46,16 @@ const Dashboard = () => {
         <aside className='hidden min-w-[250px] select-none lg:flex lg:flex-col lg:gap-5'>
           <SearchBar />
           {phantomResult && categorieResult && (
-            <div>
+            <div className='flex justify-between'>
               <h2 className='text-md font-bold'>Filters</h2>
+              {searchParams.size !== 0 && (
+                <Button
+                  className='text-bcg-filter font-bold'
+                  handleOnClick={() => onClickClearFilters()}
+                >
+                  Clear filters
+                </Button>
+              )}
             </div>
           )}
           {phantomResult && launchTypeCategories && (
