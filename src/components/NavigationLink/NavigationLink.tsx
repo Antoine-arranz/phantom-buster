@@ -1,20 +1,16 @@
 import { VariantProps, cva } from "class-variance-authority";
 import { AnchorHTMLAttributes, ReactNode } from "react";
-import cn from "../../utils/cn";
+import { NavLink } from "react-router-dom";
 
-export interface LinkProps
+export interface NavigationLinkProps
   extends AnchorHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof anchorVariants> {
   children: ReactNode;
   link?: string;
 }
 
-const Link = ({ children, className, variant, link = "#" }: LinkProps) => {
-  return (
-    <a href={link} className={cn(anchorVariants({ variant, className }))}>
-      <span className='font-medium text-body-l'>{children}</span>
-    </a>
-  );
+const NavigationLink = ({ children }: NavigationLinkProps) => {
+  return <NavLink to=''>{children}</NavLink>;
 };
 
 const anchorVariants = cva("rounded-md", {
@@ -29,4 +25,4 @@ const anchorVariants = cva("rounded-md", {
   },
 });
 
-export default Link;
+export default NavigationLink;
