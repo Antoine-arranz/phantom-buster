@@ -7,10 +7,12 @@ export enum ApiEnum {
   Categorie = "categorie",
 }
 
-export const useApiHook = (api: ApiEnum) => {
+export const useApiHook = <T extends IPhantoms[] | string[]>(
+  api: ApiEnum
+): [T, string, boolean] => {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<IPhantoms | undefined>(undefined);
-  const [error, setError] = useState<any>(undefined);
+  const [result, setResult] = useState<IPhantoms[] | string[]>();
+  const [error, setError] = useState<string>("");
 
   try {
     useEffect(() => {
@@ -22,8 +24,8 @@ export const useApiHook = (api: ApiEnum) => {
       }
     }, [api]);
   } catch (error) {
-    setError(error);
+    setError(error as string);
   }
 
-  return [result, error, loading];
+  return [result as T, error, loading];
 };
