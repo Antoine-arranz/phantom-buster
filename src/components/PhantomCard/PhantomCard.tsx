@@ -1,18 +1,20 @@
 const PhantomCard = ({ phantomCard }: any) => {
   return (
-    <div className='px-5 flex flex-col shadow-card p-3 rounded-1.5 w-full border hover:shadow-card h-[14.625rem] border-transparent'>
-      <div className='h-2/5 mb-3 flex items-center justify-between'>
+    <div className='bg-bcg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]'>
+      <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
         <span>icon</span>
         <span>dropdown menu</span>
       </div>
-      <div className='h-2/5 mb-3'>
-        <span>{phantomCard.script}</span>
-        <h2>{phantomCard.name}</h2>
+      <div className='h-2/5 mb-3 hover:cursor-pointer'>
+        <span className='text-secondary-text'>{phantomCard.script}</span>
+        <h2 className='font-bold text-xl'>{phantomCard.name}</h2>
       </div>
       <div className='h-2/5 flex items-center justify-between space-x-1 '>
-        <div>toogle</div>
-        <p>off</p>
-        <p>{phantomCard.launchType}</p>
+        <div className='flex gap-10 text-secondary-text'>
+          <div>toogle</div>
+          <p>off</p>
+          <p>{phantomCard.launchType}</p>
+        </div>
         <p>slot</p>
       </div>
     </div>
