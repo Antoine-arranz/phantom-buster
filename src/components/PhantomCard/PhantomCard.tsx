@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
@@ -15,6 +15,30 @@ const PhantomCard = ({
 }: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
+  const [timeRemain, setTimeRemain] = useState<number>(
+    phantomCard.nextLaunchIn || 0
+  );
+
+  const formatTimeRemain = (timeRemain: number) => {
+    const hours = Math.floor(timeRemain / 3600);
+    const minutes = Math.floor((timeRemain % 3600) / 60);
+    const remainingSeconds = timeRemain % 60;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (timeRemain > 0) {
+        setTimeRemain(timeRemain - 1);
+      } else {
+        setTimeRemain(phantomCard.nextLaunchIn);
+      }
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [timeRemain]);
+
   const toggleMenu = () => {
     setToggleMenuOpen(!isToggleMenuOpen);
   };
@@ -98,6 +122,7 @@ const PhantomCard = ({
             {isLaunched ? "on" : "off"}
           </p>
           <p>{phantomCard.launchType}</p>
+          <p>{phantomCard.nextLaunchIn && formatTimeRemain(timeRemain)}</p>
         </div>
         <p>slot</p>
       </div>
