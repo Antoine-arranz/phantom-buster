@@ -7,10 +7,15 @@ export interface NavigationLinkProps
     VariantProps<typeof anchorVariants> {
   children: ReactNode;
   link?: string;
+  className: string;
 }
 
-const NavigationLink = ({ children }: NavigationLinkProps) => {
-  return <NavLink to=''>{children}</NavLink>;
+const NavigationLink = ({ children, className }: NavigationLinkProps) => {
+  return (
+    <NavLink className={className} to=''>
+      {children}
+    </NavLink>
+  );
 };
 
 const anchorVariants = cva("rounded-md", {

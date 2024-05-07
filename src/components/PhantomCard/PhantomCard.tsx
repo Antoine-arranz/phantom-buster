@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
-import { IPhantoms } from "../../data/phantoms";
+import { IPhantom } from "../../data/phantoms";
 
 interface PhantomCardProps {
-  phantomCard: IPhantoms;
+  phantomCard: IPhantom;
   handleDeletePhantom: (id: string) => void;
 }
 
@@ -28,16 +28,16 @@ const PhantomCard = ({
       .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (timeRemain > 0) {
-        setTimeRemain(timeRemain - 1);
-      } else {
-        setTimeRemain(phantomCard.nextLaunchIn);
-      }
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [timeRemain]);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     if (timeRemain > 0) {
+  //       setTimeRemain(timeRemain - 1);
+  //     } else {
+  //       setTimeRemain(phantomCard.nextLaunchIn);
+  //     }
+  //   }, 1000);
+  //   return () => clearTimeout(timeout);
+  // }, [timeRemain]);
 
   const toggleMenu = () => {
     setToggleMenuOpen(!isToggleMenuOpen);
@@ -102,7 +102,13 @@ const PhantomCard = ({
   return (
     <div className='bg-bcg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]'>
       <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
-        <h2>{categoriesText}</h2>
+        <div className='flex gap-10'>
+          {phantomCard.manifest.tags.categories.map((category) => (
+            <h2 className='border rounded-xl p-3 text-bcg-filter font-bold'>
+              {category}
+            </h2>
+          ))}
+        </div>
         <span>{dropDownMenu}</span>
       </div>
       <div className='h-2/5 mb-3 hover:cursor-pointer'>

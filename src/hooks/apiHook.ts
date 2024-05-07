@@ -6,6 +6,8 @@ import {
 } from "../api/dashboard";
 import { IPhantoms } from "../data/phantoms";
 import { useLocalStorage } from "./localStorageHook";
+import filterPhantomByCategory from "../utils/filterPhantomByCategory";
+import collectCategories from "../utils/collectCategories ";
 
 export enum ApiEnum {
   Phantom = "phantom",
@@ -14,44 +16,55 @@ export enum ApiEnum {
 
 export const KEY = "phantom";
 
-export const useApiHook = <T extends IPhantoms[] | string[]>(
+export const useApiHook = <T extends IPhantoms | string[]>(
   api?: ApiEnum,
   categories?: string[]
 ): {
   result: T;
   getPhantoms: (categories?: string[]) => void;
   deletePhantom: (id: string) => void;
+  getCategories: () => void;
 } => {
   const [result, setResult] = useState<IPhantoms | string[]>();
   const { setItem, getItem } = useLocalStorage();
 
-  try {
-    useEffect(() => {
-      getPhantoms(categories);
-    }, [api, categories]);
-  } catch (error) {
-    console.log(error);
-  }
-
-  const getPhantoms = (categories?: string[]): void => {
-    if (api === ApiEnum.Phantom) {
-      if (categories) {
-        const phantoms = getPhantomsApi(categories);
-        setResult(phantoms);
-        return;
+  useEffect(() => {
+    try {
+      if (api === ApiEnum.Phantom) {
+        getPhantoms(categories);
+      } else if (api === ApiEnum.Categorie) {
+        getCategories();
       }
-      const phantomCached = getItem(KEY);
-      if (phantomCached) {
-        setResult(JSON.parse(phantomCached));
-        return;
-      } else {
-        const phantoms = getPhantomsApi();
-        setResult(phantoms);
-        setItem(KEY, JSON.stringify(phantoms));
-      }
-    } else if (api === ApiEnum.Categorie) {
-      setResult(getCategoriesApi());
+    } catch (error) {
+      console.log(error);
     }
+  }, [api, categories]);
+
+  //2 chose :> recupere mes phantoms ou recuperer mes phantoms filtred
+  // récupere mes phantom du cache ou de l'api
+  const getPhantoms = (categories: string[] = []): void => {
+    const phantomCached = getItem(KEY);
+    if (phantomCached) {
+      const phamtom = filterPhantomByCategory(
+        JSON.parse(phantomCached),
+        categories
+      );
+      setResult(phamtom);
+      return;
+    }
+    const phantoms = getPhantomsApi();
+    setResult(phantoms);
+    setItem(KEY, JSON.stringify(phantoms));
+  };
+
+  const getCategories = () => {
+    const phantomCached = getItem(KEY);
+    if (phantomCached) {
+      const categories = collectCategories(JSON.parse(phantomCached));
+      setResult(categories);
+      return;
+    }
+    setResult(getCategoriesApi());
   };
 
   const deletePhantom = (id: string): void => {
@@ -67,5 +80,5 @@ export const useApiHook = <T extends IPhantoms[] | string[]>(
     setItem(KEY, JSON.stringify(phantoms));
   };
 
-  return { result: result as T, getPhantoms, deletePhantom };
+  return { result: result as T, getPhantoms, deletePhantom, getCategories };
 };
