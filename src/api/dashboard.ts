@@ -1,5 +1,6 @@
 import { IPhantoms } from "../data/phantoms";
 import data from "../data/phantoms.json";
+import collectCategories from "../utils/collectCategories ";
 
 export const getPhantomsApi = (categories?: string[]): IPhantoms => {
   if (categories) {
@@ -24,12 +25,7 @@ export const getPhantomsApi = (categories?: string[]): IPhantoms => {
 };
 
 export const getCategoriesApi = (): string[] => {
-  const categories = new Set<string>();
-  data.forEach((item) => {
-    const itemCategories = item.manifest.tags.categories;
-    itemCategories.forEach((category) => categories.add(category));
-  });
-  return Array.from(categories);
+  return collectCategories(data as IPhantoms);
 };
 
 export const deletePhantom = (): IPhantoms => {

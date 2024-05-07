@@ -1,5 +1,4 @@
 import Section from "../../components/Layout/Section";
-import PhantomCard from "../../components/PhantomCard/PhantomCard";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { ApiEnum, KEY, useApiHook } from "../../hooks/apiHook";
 import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
@@ -9,6 +8,7 @@ import { IPhantoms } from "../../data/phantoms";
 import createListFromEnum from "../../utils/listFromEnum";
 import { useLocalStorage } from "../../hooks/localStorageHook";
 import { useEffect } from "react";
+import PhantomList from "../../components/PhantomList/PhantomList";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -28,12 +28,16 @@ const Dashboard = () => {
     result: phantomResult,
     getPhantoms,
     deletePhantom,
-  } = useApiHook<IPhantoms[]>(ApiEnum.Phantom);
-  const { result: categorieResult } = useApiHook<string[]>(ApiEnum.Categorie);
+  } = useApiHook<IPhantoms>(ApiEnum.Phantom);
+  const { result: categorieResult, getCategories } = useApiHook<string[]>(
+    ApiEnum.Categorie
+  );
 
   const handleDeletePhantom = (id: string) => {
     deletePhantom(id);
-    getPhantoms();
+    retrievePhantomsWithParams();
+    getCategories();
+    console.log("OK");
   };
 
   const onResetStorage = () => {
@@ -44,7 +48,7 @@ const Dashboard = () => {
     setSearchParams("");
   };
 
-  const retrievePhantoms = () => {
+  const retrievePhantomsWithParams = () => {
     const platformFilter = searchParams.get("Platforms");
     if (platformFilter) {
       getPhantoms([platformFilter]);
@@ -54,7 +58,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    retrievePhantoms();
+    retrievePhantomsWithParams();
   }, [searchParams]);
 
   const activityCategories = createListFromEnum(Activity);
@@ -105,16 +109,10 @@ const Dashboard = () => {
           </Button>
         </aside>
         <div className='flex flex-col gap-10 w-full'>
-          {phantomResult &&
-            phantomResult.map((phantomCard, index: number) => {
-              return (
-                <PhantomCard
-                  handleDeletePhantom={handleDeletePhantom}
-                  key={index}
-                  phantomCard={phantomCard}
-                ></PhantomCard>
-              );
-            })}
+          <PhantomList
+            phantoms={phantomResult}
+            handleDeletePhantom={handleDeletePhantom}
+          />
         </div>
       </div>
     </Section>
