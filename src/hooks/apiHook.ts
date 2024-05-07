@@ -1,31 +1,53 @@
 import { useEffect, useState } from "react";
-import { getAllPhantoms, getCategories } from "../api/dashboard";
+import { getCategoriesApi, getPhantomsApi } from "../api/dashboard";
 import { IPhantoms } from "../data/phantoms";
+import { useLocalStorage } from "./localStorageHook";
 
 export enum ApiEnum {
   Phantom = "phantom",
   Categorie = "categorie",
 }
 
+export const KEY = "phantom";
+
 export const useApiHook = <T extends IPhantoms[] | string[]>(
-  api: ApiEnum
-): [T, string, boolean] => {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<IPhantoms[] | string[]>();
-  const [error, setError] = useState<string>("");
+  api?: ApiEnum,
+  categories?: string[]
+): {
+  result: T;
+  getPhantoms: (categories?: string[]) => void;
+} => {
+  const [result, setResult] = useState<IPhantoms | string[]>();
+  const { setItem, getItem } = useLocalStorage();
 
   try {
     useEffect(() => {
-      setLoading(true);
-      if (api === ApiEnum.Phantom) {
-        setResult(getAllPhantoms());
-      } else if (api === ApiEnum.Categorie) {
-        setResult(getCategories());
-      }
-    }, [api]);
+      getPhantoms(categories);
+    }, [api, categories]);
   } catch (error) {
-    setError(error as string);
+    console.log(error);
   }
 
-  return [result as T, error, loading];
+  const getPhantoms = (categories?: string[]): void => {
+    if (api === ApiEnum.Phantom) {
+      if (categories) {
+        const phantoms = getPhantomsApi(categories);
+        setResult(phantoms);
+        return;
+      }
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        setResult(JSON.parse(phantomCached));
+        return;
+      } else {
+        const phantoms = getPhantomsApi();
+        setResult(phantoms);
+        setItem(KEY, JSON.stringify(phantoms));
+      }
+    } else if (api === ApiEnum.Categorie) {
+      setResult(getCategoriesApi());
+    }
+  };
+
+  return { result: result as T, getPhantoms };
 };

@@ -1,12 +1,29 @@
 import { IPhantoms } from "../data/phantoms";
 import data from "../data/phantoms.json";
 
-export const getAllPhantoms = (): IPhantoms[] => {
-  setTimeout(() => console.log("fetching getAllPhantoms"), 200);
-  return data as unknown as IPhantoms[];
+export const getPhantomsApi = (categories?: string[]): IPhantoms => {
+  if (categories) {
+    return data.filter((item) => {
+      if (
+        item.manifest &&
+        item.manifest.tags &&
+        item.manifest.tags.categories
+      ) {
+        // Vérifier si au moins une catégorie de l'élément correspond à une des catégories données
+        for (let category of categories) {
+          if (item.manifest.tags.categories.includes(category)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }) as IPhantoms;
+  } else {
+    return data as unknown as IPhantoms;
+  }
 };
 
-export const getCategories = (): string[] => {
+export const getCategoriesApi = (): string[] => {
   const categories = new Set<string>();
   data.forEach((item) => {
     const itemCategories = item.manifest.tags.categories;
