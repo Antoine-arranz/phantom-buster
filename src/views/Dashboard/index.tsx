@@ -23,26 +23,38 @@ enum Activity {
 }
 const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { result: phantomResult, getPhantoms } = useApiHook<IPhantoms[]>(
-    ApiEnum.Phantom
-  );
-
+  const { removeItem } = useLocalStorage();
+  const {
+    result: phantomResult,
+    getPhantoms,
+    deletePhantom,
+  } = useApiHook<IPhantoms[]>(ApiEnum.Phantom);
   const { result: categorieResult } = useApiHook<string[]>(ApiEnum.Categorie);
 
-  const { removeItem } = useLocalStorage();
+  const handleDeletePhantom = (id: string) => {
+    deletePhantom(id);
+    getPhantoms();
+  };
+
+  const onResetStorage = () => {
+    removeItem(KEY);
+  };
 
   const onClickClearFilters = () => {
     setSearchParams("");
   };
 
-  useEffect(() => {
+  const retrievePhantoms = () => {
     const platformFilter = searchParams.get("Platforms");
     if (platformFilter) {
       getPhantoms([platformFilter]);
     } else {
       getPhantoms();
     }
+  };
+
+  useEffect(() => {
+    retrievePhantoms();
   }, [searchParams]);
 
   const activityCategories = createListFromEnum(Activity);
@@ -87,7 +99,7 @@ const Dashboard = () => {
           <Button
             className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
             type='submit'
-            handleOnClick={() => removeItem(KEY)}
+            handleOnClick={onResetStorage}
           >
             Reset storage
           </Button>
@@ -97,6 +109,7 @@ const Dashboard = () => {
             phantomResult.map((phantomCard, index: number) => {
               return (
                 <PhantomCard
+                  handleDeletePhantom={handleDeletePhantom}
                   key={index}
                   phantomCard={phantomCard}
                 ></PhantomCard>

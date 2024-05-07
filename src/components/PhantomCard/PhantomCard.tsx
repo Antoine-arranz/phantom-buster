@@ -6,19 +6,31 @@ import { IPhantoms } from "../../data/phantoms";
 
 interface PhantomCardProps {
   phantomCard: IPhantoms;
+  handleDeletePhantom: (id: string) => void;
 }
 
-const PhantomCard = ({ phantomCard }: PhantomCardProps) => {
+const PhantomCard = ({
+  phantomCard,
+  handleDeletePhantom,
+}: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
   const toggleMenu = () => {
     setToggleMenuOpen(!isToggleMenuOpen);
   };
 
+  const onDeletePhantom = (id: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this Phantom ?"
+    );
+    if (confirmDelete) {
+      handleDeletePhantom(id);
+    }
+    setToggleMenuOpen(!isToggleMenuOpen);
+  };
   const handleLaunchChange = () => {
     setIsLaunched(!isLaunched);
   };
-
   const categoriesText = phantomCard.manifest.tags.categories.map(
     (category, index) => {
       const delimiter =
@@ -50,7 +62,11 @@ const PhantomCard = ({ phantomCard }: PhantomCardProps) => {
           </li>
 
           <li>
-            <label data-testid='dropDownMenu-delete' className=' text-error '>
+            <label
+              data-testid='dropDownMenu-delete'
+              onClick={() => onDeletePhantom(phantomCard.id)}
+              className=' text-error '
+            >
               Delete
             </label>
           </li>
@@ -80,7 +96,7 @@ const PhantomCard = ({ phantomCard }: PhantomCardProps) => {
           />
           <p className={` ${isLaunched ? "text-bcg-filter font-bold" : ""}`}>
             {isLaunched ? "on" : "off"}
-          </p>{" "}
+          </p>
           <p>{phantomCard.launchType}</p>
         </div>
         <p>slot</p>
