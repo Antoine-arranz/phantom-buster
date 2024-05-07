@@ -19,7 +19,7 @@ export const getPhantomsApi = (categories?: string[]): IPhantoms => {
       return false;
     }) as IPhantoms;
   } else {
-    return data as unknown as IPhantoms;
+    return data as IPhantoms;
   }
 };
 
@@ -35,4 +35,14 @@ export const getCategoriesApi = (): string[] => {
 export const deletePhantom = (): IPhantoms => {
   setTimeout(() => console.log("fetching deletePhantom"), 200);
   return data as IPhantoms;
+};
+
+export const deletePhantomApi = (
+  id: string,
+  phantoms?: IPhantoms
+): IPhantoms => {
+  if (phantoms) {
+    return phantoms.filter((phantom) => phantom.id !== id) as IPhantoms;
+  }
+  return data.filter((phantom) => phantom.id !== id) as IPhantoms;
 };
