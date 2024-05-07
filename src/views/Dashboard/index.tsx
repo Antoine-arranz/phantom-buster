@@ -1,18 +1,21 @@
 import Section from "../../components/Layout/Section";
 import PhantomCard from "../../components/PhantomCard/PhantomCard";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { ApiEnum, useApiHook } from "../../hooks/apiHook";
+import { ApiEnum, KEY, useApiHook } from "../../hooks/apiHook";
 import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
 import { useSearchParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import { IPhantoms } from "../../data/phantoms";
+import createListFromEnum from "../../utils/listFromEnum";
+import { useLocalStorage } from "../../hooks/localStorageHook";
+import { useEffect } from "react";
 
 enum LaunchType {
   Automatic = "Automatic",
   Manual = "Manual",
 }
 
-enum ActivityState {
+enum Activity {
   Running = "Running",
   Enabled = "Enabled",
   Paused = "Paused",
@@ -20,24 +23,29 @@ enum ActivityState {
 }
 const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [phantomResult, error, loading] = useApiHook<IPhantoms[]>(
+
+  const { result: phantomResult, getPhantoms } = useApiHook<IPhantoms[]>(
     ApiEnum.Phantom
   );
-  const [categorieResult, categorieLoading, categorieError] = useApiHook<
-    string[]
-  >(ApiEnum.Categorie);
-  function createListFromEnum(enumObj: any): string[] {
-    const enumKeys = Object.keys(enumObj).filter((key) =>
-      isNaN(Number(enumObj[key]))
-    );
-    return enumKeys.map((key) => enumObj[key]);
-  }
 
-  function onClickClearFilters() {
+  const { result: categorieResult } = useApiHook<string[]>(ApiEnum.Categorie);
+
+  const { removeItem } = useLocalStorage();
+
+  const onClickClearFilters = () => {
     setSearchParams("");
-  }
+  };
 
-  const activityCategories = createListFromEnum(ActivityState);
+  useEffect(() => {
+    const platformFilter = searchParams.get("Platforms");
+    if (platformFilter) {
+      getPhantoms([platformFilter]);
+    } else {
+      getPhantoms();
+    }
+  }, [searchParams]);
+
+  const activityCategories = createListFromEnum(Activity);
   const launchTypeCategories = createListFromEnum(LaunchType);
 
   return (
@@ -76,6 +84,13 @@ const Dashboard = () => {
           {categorieResult && (
             <CategoriesFilter title='Platforms' categories={categorieResult} />
           )}
+          <Button
+            className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
+            type='submit'
+            handleOnClick={() => removeItem(KEY)}
+          >
+            Reset storage
+          </Button>
         </aside>
         <div className='flex flex-col gap-10 w-full'>
           {phantomResult &&

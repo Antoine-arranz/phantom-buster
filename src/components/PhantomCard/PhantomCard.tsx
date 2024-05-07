@@ -21,7 +21,6 @@ const PhantomCard = ({ phantomCard }: PhantomCardProps) => {
 
   const categoriesText = phantomCard.manifest.tags.categories.map(
     (category, index) => {
-      console.log("ici ?????");
       const delimiter =
         index < phantomCard.manifest.tags.categories.length - 1 ? " " : "";
       return category + delimiter;
