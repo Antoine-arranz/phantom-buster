@@ -1,9 +1,0 @@
-@keyframes movePhantom {
-    50% {
-        transform: translateY(-10px)
-    }
-}
-
-.animate-phantom {
-    animation: movePhantom 4s infinite;
-}

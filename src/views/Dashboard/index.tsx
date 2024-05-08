@@ -1,15 +1,11 @@
 import Section from "../../components/Layout/Section";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import { ApiEnum, KEY, useApiHook } from "../../hooks/apiHook";
-import CategoriesFilter from "../../components/CategoriesFilter/CategoriesFilter";
+import { ApiEnum, useApiHook } from "../../hooks/apiHook";
 import { useSearchParams } from "react-router-dom";
-import Button from "../../components/Button/Button";
 import { IPhantoms } from "../../data/phantoms";
-import createListFromEnum from "../../utils/listFromEnum";
-import { useLocalStorage } from "../../hooks/localStorageHook";
 import { useEffect } from "react";
 import PhantomList from "../../components/PhantomList/PhantomList";
 import FilterSideBar from "../../components/FilterSideBar/FilterSideBar";
+import { SEARCH_KEY } from "../../components/SearchBar/SearchBar";
 
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
@@ -31,8 +27,9 @@ const Dashboard = () => {
 
   const retrievePhantomsWithParams = async () => {
     const platformFilter = searchParams.get("Platforms");
-    if (platformFilter) {
-      await getPhantoms([platformFilter]);
+    const searchFilter = searchParams.get(SEARCH_KEY);
+    if (platformFilter || searchFilter) {
+      await getPhantoms({ platform: platformFilter, search: searchFilter });
     } else {
       await getPhantoms();
     }

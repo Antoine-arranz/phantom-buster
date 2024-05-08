@@ -22,6 +22,8 @@ enum Activity {
   InError = "In Error",
 }
 
+export const PLATFORMS = "Platforms";
+
 const FilterSideBar = ({ categories }: FilterSideBarProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { removeItem } = useLocalStorage();
@@ -63,7 +65,7 @@ const FilterSideBar = ({ categories }: FilterSideBarProps) => {
         <CategoriesFilter title='Activity' categories={activityCategories} />
       )}
 
-      {categories && (
+      {categories && categories.length > 0 && (
         <CategoriesFilter title='Platforms' categories={categories} />
       )}
       <Button

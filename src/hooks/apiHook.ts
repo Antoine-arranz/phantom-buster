@@ -9,6 +9,7 @@ import { useLocalStorage } from "./localStorageHook";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 import collectCategories from "../utils/collectCategories ";
 import { notifyError } from "../utils/notify";
+import { SearchParams } from "../interfaces/searchParams";
 
 export enum ApiEnum {
   Phantom = "phantom",
@@ -31,10 +32,10 @@ export const KEY = "phantom";
  */
 export const useApiHook = <T extends IPhantoms | string[]>(
   api: ApiEnum,
-  categories?: string[]
+  categories?: SearchParams
 ): {
   result: T;
-  getPhantoms: (categories?: string[]) => void;
+  getPhantoms: (searchParams?: SearchParams) => void;
   deletePhantom: (id: string) => void;
   getCategories: () => void;
 } => {
@@ -53,7 +54,7 @@ export const useApiHook = <T extends IPhantoms | string[]>(
     }
   }, [api, categories]);
 
-  const getPhantoms = async (categories: string[] = []): Promise<void> => {
+  const getPhantoms = async (categories: SearchParams = {}): Promise<void> => {
     const phantomCached = getItem(KEY);
     if (phantomCached) {
       const phamtom = filterPhantomByCategory(
