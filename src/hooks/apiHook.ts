@@ -8,6 +8,7 @@ import { IPhantoms } from "../data/phantoms";
 import { useLocalStorage } from "./localStorageHook";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 import collectCategories from "../utils/collectCategories ";
+import { notifyError } from "../utils/notify";
 
 export enum ApiEnum {
   Phantom = "phantom",
@@ -48,7 +49,7 @@ export const useApiHook = <T extends IPhantoms | string[]>(
         getCategories();
       }
     } catch (error) {
-      console.log(error);
+      notifyError(error as unknown as string);
     }
   }, [api, categories]);
 
@@ -77,7 +78,7 @@ export const useApiHook = <T extends IPhantoms | string[]>(
       }
       setResult(await getCategoriesApi());
     } catch (error) {
-      //error
+      notifyError(error as unknown as string);
     }
   };
 
@@ -94,7 +95,7 @@ export const useApiHook = <T extends IPhantoms | string[]>(
       setResult(phantoms);
       setItem(KEY, JSON.stringify(phantoms));
     } catch (error) {
-      //Error
+      notifyError(error as unknown as string);
     }
   };
 
