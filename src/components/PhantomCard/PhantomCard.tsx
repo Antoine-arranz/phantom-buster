@@ -3,6 +3,7 @@ import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
 import { IPhantom } from "../../data/phantoms";
+import Button from "../Button/Button";
 
 interface PhantomCardProps {
   phantomCard: IPhantom;
@@ -104,9 +105,12 @@ const PhantomCard = ({
       <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
         <div className='flex gap-10'>
           {phantomCard.manifest.tags.categories.map((category) => (
-            <h2 className='border rounded-xl p-3 text-bcg-filter font-bold'>
+            <Button
+              key={category}
+              className='border rounded-xl p-3 text-bcg-filter font-bold'
+            >
               {category}
-            </h2>
+            </Button>
           ))}
         </div>
         <span>{dropDownMenu}</span>
