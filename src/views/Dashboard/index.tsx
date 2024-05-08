@@ -9,21 +9,10 @@ import createListFromEnum from "../../utils/listFromEnum";
 import { useLocalStorage } from "../../hooks/localStorageHook";
 import { useEffect } from "react";
 import PhantomList from "../../components/PhantomList/PhantomList";
+import FilterSideBar from "../../components/FilterSideBar/FilterSideBar";
 
-enum LaunchType {
-  Automatic = "Automatic",
-  Manual = "Manual",
-}
-
-enum Activity {
-  Running = "Running",
-  Enabled = "Enabled",
-  Paused = "Paused",
-  InError = "In Error",
-}
 const Dashboard = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { removeItem } = useLocalStorage();
+  const [searchParams] = useSearchParams();
   const {
     result: phantomResult,
     getPhantoms,
@@ -37,14 +26,7 @@ const Dashboard = () => {
     await deletePhantom(id);
     await retrievePhantomsWithParams();
     await getCategories();
-  };
-
-  const onResetStorage = () => {
-    removeItem(KEY);
-  };
-
-  const onClickClearFilters = () => {
-    setSearchParams("");
+    console.log("OK");
   };
 
   const retrievePhantomsWithParams = async () => {
@@ -60,53 +42,11 @@ const Dashboard = () => {
     retrievePhantomsWithParams();
   }, [searchParams]);
 
-  const activityCategories = createListFromEnum(Activity);
-  const launchTypeCategories = createListFromEnum(LaunchType);
-
   return (
     <Section>
       <h1 className='text-3xl font-extrabold'>Dashboard</h1>
       <div className='mt-9 flex flex-col lg:flex-row lg:gap-10'>
-        <aside className='hidden min-w-[250px] select-none lg:flex lg:flex-col lg:gap-5'>
-          <SearchBar />
-          {phantomResult && categorieResult && (
-            <div className='flex justify-between'>
-              <h2 className='text-md font-bold'>Filters</h2>
-              {searchParams.size !== 0 && (
-                <Button
-                  className='text-bcg-filter font-bold'
-                  handleOnClick={() => onClickClearFilters()}
-                >
-                  Clear filters
-                </Button>
-              )}
-            </div>
-          )}
-          {phantomResult && launchTypeCategories && (
-            <CategoriesFilter
-              title='Launch type'
-              categories={launchTypeCategories}
-            />
-          )}
-
-          {phantomResult && activityCategories && (
-            <CategoriesFilter
-              title='Activity'
-              categories={activityCategories}
-            />
-          )}
-
-          {categorieResult && (
-            <CategoriesFilter title='Platforms' categories={categorieResult} />
-          )}
-          <Button
-            className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
-            type='submit'
-            handleOnClick={onResetStorage}
-          >
-            Reset storage
-          </Button>
-        </aside>
+        <FilterSideBar categories={categorieResult} />
         <div className='flex flex-col gap-10 w-full'>
           <PhantomList
             phantoms={phantomResult}
