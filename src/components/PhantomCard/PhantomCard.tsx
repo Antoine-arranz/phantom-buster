@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
@@ -34,7 +34,9 @@ const PhantomCard = ({
   //     if (timeRemain > 0) {
   //       setTimeRemain(timeRemain - 1);
   //     } else {
-  //       setTimeRemain(phantomCard.nextLaunchIn);
+  //       if (phantomCard.nextLaunchIn) {
+  //         setTimeRemain(phantomCard.nextLaunchIn);
+  //       }
   //     }
   //   }, 1000);
   //   return () => clearTimeout(timeout);
@@ -56,13 +58,6 @@ const PhantomCard = ({
   const handleLaunchChange = () => {
     setIsLaunched(!isLaunched);
   };
-  const categoriesText = phantomCard.manifest.tags.categories.map(
-    (category, index) => {
-      const delimiter =
-        index < phantomCard.manifest.tags.categories.length - 1 ? " " : "";
-      return category + delimiter;
-    }
-  );
 
   const dropDownMenu = (
     <div className='relative'>

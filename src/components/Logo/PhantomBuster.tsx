@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./svgAnimation.css";
 type SvgProps = {
   size?: number;
   className?: string;
@@ -31,7 +30,7 @@ const PhantomLogoSVG = ({ size = 28, className = "" }: SvgProps) => {
 
       setOffsetX(randomX);
       setOffsetY(randomY);
-    }, 1500);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -63,7 +62,7 @@ const PhantomLogoSVG = ({ size = 28, className = "" }: SvgProps) => {
         fill='#3A3837'
         style={{
           transform: `translate(${translateX}px, ${translateY}px)`,
-          transition: "transform 2s ease-in",
+          transition: "transform 1.5s ease-in",
           willChange: "transform",
         }}
       />

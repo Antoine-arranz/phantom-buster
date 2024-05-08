@@ -1,9 +1,12 @@
 import { IPhantoms } from "../data/phantoms";
 import data from "../data/phantoms.json";
+import { SearchParams } from "../interfaces/searchParams";
 import collectCategories from "../utils/collectCategories ";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 
-export const getPhantomsApi = (categories?: string[]): Promise<IPhantoms> => {
+export const getPhantomsApi = (
+  categories?: SearchParams
+): Promise<IPhantoms> => {
   return new Promise((resolve, reject) => {
     try {
       let phantomsData = data as IPhantoms;
