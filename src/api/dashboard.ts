@@ -1,31 +1,31 @@
 import { IPhantoms } from "../data/phantoms";
 import data from "../data/phantoms.json";
 import collectCategories from "../utils/collectCategories ";
+import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 
-export const getPhantomsApi = (categories?: string[]): IPhantoms => {
-  if (categories) {
-    return data.filter((item) => {
-      if (
-        item.manifest &&
-        item.manifest.tags &&
-        item.manifest.tags.categories
-      ) {
-        // Vérifier si au moins une catégorie de l'élément correspond à une des catégories données
-        for (let category of categories) {
-          if (item.manifest.tags.categories.includes(category)) {
-            return true;
-          }
-        }
+export const getPhantomsApi = (categories?: string[]): Promise<IPhantoms> => {
+  return new Promise((resolve, reject) => {
+    try {
+      let phantomsData = data as IPhantoms;
+      if (categories) {
+        phantomsData = filterPhantomByCategory(phantomsData, categories);
       }
-      return false;
-    }) as IPhantoms;
-  } else {
-    return data as IPhantoms;
-  }
+      resolve(phantomsData);
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
-export const getCategoriesApi = (): string[] => {
-  return collectCategories(data as IPhantoms);
+export const getCategoriesApi = (): Promise<string[]> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const categories = collectCategories(data as IPhantoms);
+      resolve(categories);
+    } catch (error) {
+      reject(error);
+    }
+  });
 };
 
 export const deletePhantom = (): IPhantoms => {
@@ -36,9 +36,22 @@ export const deletePhantom = (): IPhantoms => {
 export const deletePhantomApi = (
   id: string,
   phantoms?: IPhantoms
-): IPhantoms => {
-  if (phantoms) {
-    return phantoms.filter((phantom) => phantom.id !== id) as IPhantoms;
-  }
-  return data.filter((phantom) => phantom.id !== id) as IPhantoms;
+): Promise<IPhantoms> => {
+  return new Promise((resolve, reject) => {
+    try {
+      let updatedPhantoms: IPhantoms;
+      if (phantoms) {
+        updatedPhantoms = phantoms.filter(
+          (phantom) => phantom.id !== id
+        ) as IPhantoms;
+      } else {
+        updatedPhantoms = data.filter(
+          (phantom) => phantom.id !== id
+        ) as IPhantoms;
+      }
+      resolve(updatedPhantoms);
+    } catch (error) {
+      reject(error);
+    }
+  });
 };

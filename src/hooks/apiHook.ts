@@ -16,8 +16,20 @@ export enum ApiEnum {
 
 export const KEY = "phantom";
 
+/**
+ * Custom hook for interacting with the API.
+ * @template T - Type of the result returned by the API.
+ * @param {ApiEnum} [api] - enum specifying the type of API.
+ * @param {string[]} [categories] - Optional array of categories.
+ * @returns {{
+ *   result: T,
+ *   getPhantoms: (categories?: string[]) => Promise<void>,
+ *   deletePhantom: (id: string) => Promise<void>,
+ *   getCategories: () => Promise<void>
+ * }} - Object containing the hook's results and functions.
+ */
 export const useApiHook = <T extends IPhantoms | string[]>(
-  api?: ApiEnum,
+  api: ApiEnum,
   categories?: string[]
 ): {
   result: T;
@@ -40,9 +52,7 @@ export const useApiHook = <T extends IPhantoms | string[]>(
     }
   }, [api, categories]);
 
-  //2 chose :> recupere mes phantoms ou recuperer mes phantoms filtred
-  // récupere mes phantom du cache ou de l'api
-  const getPhantoms = (categories: string[] = []): void => {
+  const getPhantoms = async (categories: string[] = []): Promise<void> => {
     const phantomCached = getItem(KEY);
     if (phantomCached) {
       const phamtom = filterPhantomByCategory(
@@ -52,32 +62,40 @@ export const useApiHook = <T extends IPhantoms | string[]>(
       setResult(phamtom);
       return;
     }
-    const phantoms = getPhantomsApi();
+    const phantoms = await getPhantomsApi(categories);
     setResult(phantoms);
     setItem(KEY, JSON.stringify(phantoms));
   };
 
-  const getCategories = () => {
-    const phantomCached = getItem(KEY);
-    if (phantomCached) {
-      const categories = collectCategories(JSON.parse(phantomCached));
-      setResult(categories);
-      return;
+  const getCategories = async () => {
+    try {
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        const categories = collectCategories(JSON.parse(phantomCached));
+        setResult(categories);
+        return;
+      }
+      setResult(await getCategoriesApi());
+    } catch (error) {
+      //error
     }
-    setResult(getCategoriesApi());
   };
 
-  const deletePhantom = (id: string): void => {
-    const phantomCached = getItem(KEY);
-    if (phantomCached) {
-      const phantoms = deletePhantomApi(id, JSON.parse(phantomCached));
+  const deletePhantom = async (id: string): Promise<void> => {
+    try {
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        const phantoms = await deletePhantomApi(id, JSON.parse(phantomCached));
+        setResult(phantoms);
+        setItem(KEY, JSON.stringify(phantoms));
+        return;
+      }
+      const phantoms = await deletePhantomApi(id);
       setResult(phantoms);
       setItem(KEY, JSON.stringify(phantoms));
-      return;
+    } catch (error) {
+      //Error
     }
-    const phantoms = deletePhantomApi(id);
-    setResult(phantoms);
-    setItem(KEY, JSON.stringify(phantoms));
   };
 
   return { result: result as T, getPhantoms, deletePhantom, getCategories };

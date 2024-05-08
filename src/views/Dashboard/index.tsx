@@ -33,11 +33,10 @@ const Dashboard = () => {
     ApiEnum.Categorie
   );
 
-  const handleDeletePhantom = (id: string) => {
-    deletePhantom(id);
-    retrievePhantomsWithParams();
-    getCategories();
-    console.log("OK");
+  const handleDeletePhantom = async (id: string) => {
+    await deletePhantom(id);
+    await retrievePhantomsWithParams();
+    await getCategories();
   };
 
   const onResetStorage = () => {
@@ -48,12 +47,12 @@ const Dashboard = () => {
     setSearchParams("");
   };
 
-  const retrievePhantomsWithParams = () => {
+  const retrievePhantomsWithParams = async () => {
     const platformFilter = searchParams.get("Platforms");
     if (platformFilter) {
-      getPhantoms([platformFilter]);
+      await getPhantoms([platformFilter]);
     } else {
-      getPhantoms();
+      await getPhantoms();
     }
   };
 
