@@ -2,21 +2,15 @@ import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import { BrowserRouter } from "react-router-dom";
 import { Router } from ".././router/router";
-import { ToastContainer } from "react-toastify";
+import Toaster from "../components/Toaster/Toaster";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Header></Header>
-        <ToastContainer
-          autoClose={5000}
-          hideProgressBar={false}
-          position='top-center'
-          theme='dark'
-        />
-
-        <main className='bg-bcg-primary h-100'>
+        <Toaster />
+        <main className='bg-bcg-primary h-full'>
           <Router />
         </main>
       </BrowserRouter>{" "}

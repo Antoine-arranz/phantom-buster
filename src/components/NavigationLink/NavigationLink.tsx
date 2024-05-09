@@ -12,7 +12,7 @@ export interface NavigationLinkProps
 
 const NavigationLink = ({ children, className }: NavigationLinkProps) => {
   return (
-    <NavLink className={className} to=''>
+    <NavLink className={className} to='/dashboard'>
       {children}
     </NavLink>
   );

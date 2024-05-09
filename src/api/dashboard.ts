@@ -1,4 +1,4 @@
-import { IPhantoms } from "../data/phantoms";
+import { IPhantom, IPhantoms } from "../data/phantoms";
 import data from "../data/phantoms.json";
 import { SearchParams } from "../interfaces/searchParams";
 import collectCategories from "../utils/collectCategories ";
@@ -89,6 +89,21 @@ export const duplicatePhantomApi = (
       resolve(phantoms);
     } else {
       reject(new Error("Phantom not found"));
+    }
+  });
+};
+
+export const getPhantomByIdApi = (
+  id: string,
+  phantoms: IPhantoms = data as IPhantoms
+): Promise<IPhantom> => {
+  return new Promise((resolve, reject) => {
+    const foundPhantom = phantoms.find((phantom) => phantom.id === id);
+
+    if (foundPhantom) {
+      resolve(foundPhantom);
+    } else {
+      reject(new Error(`Phantom with ID ${id} not found`));
     }
   });
 };
