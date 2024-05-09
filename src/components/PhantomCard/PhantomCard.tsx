@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { MoreDotsSVG } from "../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
@@ -7,12 +7,15 @@ import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import { useClickOutside } from "../../hooks/clickOutside";
 import { notifyError } from "../../utils/notify";
+import { Link } from "react-router-dom";
+import clsx from "clsx";
 
 interface PhantomCardProps {
   phantom: IPhantom;
   handleDeletePhantom: (id: string) => void;
   renamePhantom: (id: string, input: string) => void;
   duplicatedPhantom: (id: string) => void;
+  className?: ReactNode;
 }
 
 const PhantomCard = ({
@@ -20,6 +23,7 @@ const PhantomCard = ({
   handleDeletePhantom,
   renamePhantom,
   duplicatedPhantom,
+  className,
 }: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
@@ -68,6 +72,7 @@ const PhantomCard = ({
   };
   const handleLaunchChange = () => {
     setIsLaunched(!isLaunched);
+    setTimeRemain(phantom.nextLaunchIn || 0);
   };
 
   const handleClickOnRename = () => {
@@ -137,7 +142,12 @@ const PhantomCard = ({
   );
 
   return (
-    <div className='bg-bcg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]'>
+    <div
+      className={clsx(
+        "bg-bcg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]",
+        className
+      )}
+    >
       <Modal
         open={isModalOpen}
         close={closeModal}
@@ -167,7 +177,7 @@ const PhantomCard = ({
         </div>
       </Modal>
       <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
-        <div className='flex gap-10'>
+        <div className='flex sm:gap-5 flex-wrap'>
           {phantom.manifest.tags.categories.map((category) => (
             <Button
               key={category}
@@ -179,10 +189,13 @@ const PhantomCard = ({
         </div>
         <span>{dropDownMenu}</span>
       </div>
-      <div className='h-2/5 mb-3 hover:cursor-pointer'>
+      <Link
+        to={`/phantom/${phantom.id}`}
+        className='h-2/5 mb-3 hover:cursor-pointer'
+      >
         <span className='text-secondary-text'>{phantom.script}</span>
         <h2 className='font-bold text-xl'>{phantom.name}</h2>
-      </div>
+      </Link>
       <div className='h-2/5 flex items-center justify-between space-x-1 '>
         <div className='flex gap-5 text-secondary-text'>
           <Toggle
@@ -196,9 +209,10 @@ const PhantomCard = ({
             {isLaunched ? "on" : "off"}
           </p>
           <p>{phantom.launchType}</p>
-          <p>{phantom.nextLaunchIn && formatTimeRemain(timeRemain)}</p>
+          <p>
+            {isLaunched && phantom.nextLaunchIn && formatTimeRemain(timeRemain)}
+          </p>
         </div>
-        <p>slot</p>
       </div>
     </div>
   );

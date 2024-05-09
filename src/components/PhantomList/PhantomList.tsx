@@ -10,10 +10,11 @@ import { SearchParams } from "../../interfaces/searchParams";
 
 interface PhantomListProps {
   phantoms: IPhantoms;
-  getPhantoms: (searchParams?: SearchParams | undefined) => void;
-  deletePhantom: (id: string) => void;
-  renamePhantom: (id: string, value: string) => void;
-  duplicatedPhantom: (id: string) => void;
+  getPhantoms: (searchParams?: SearchParams) => Promise<IPhantoms>;
+  deletePhantom: (id: string) => Promise<void>;
+  renamePhantom: (id: string, value: string) => Promise<void>;
+  duplicatedPhantom: (id: string) => Promise<void>;
+  setPhantoms: React.Dispatch<React.SetStateAction<IPhantoms | undefined>>;
 }
 
 const PhantomList = ({
@@ -22,6 +23,7 @@ const PhantomList = ({
   deletePhantom,
   renamePhantom,
   duplicatedPhantom,
+  setPhantoms,
 }: PhantomListProps) => {
   const [searchParams] = useSearchParams();
 
@@ -43,9 +45,16 @@ const PhantomList = ({
     const platformFilter = searchParams.get("Platforms");
     const searchFilter = searchParams.get(SEARCH_KEY);
     if (platformFilter || searchFilter) {
-      await getPhantoms({ platform: platformFilter, search: searchFilter });
+      const phantoms = await getPhantoms({
+        platform: platformFilter,
+        search: searchFilter,
+      });
+      if (phantoms) {
+        setPhantoms(phantoms);
+      }
     } else {
-      await getPhantoms();
+      const phantoms = await getPhantoms();
+      setPhantoms(phantoms);
     }
   };
 
@@ -55,7 +64,7 @@ const PhantomList = ({
 
   return (
     <Fragment>
-      <div className='border-dashed border border-gray-500 text-center p-7 rounded-xl'>
+      <div className='mt-4 border-dashed border border-gray-500 text-center p-7 rounded-xl'>
         <PhantomLogoSVG className='m-auto' size={50}></PhantomLogoSVG>
 
         <Button className=' flex m-auto mt-4 px-2 py-1 text-white  bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'>

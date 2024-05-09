@@ -13,21 +13,25 @@ const Dashboard = () => {
     getCategories,
     renamePhantom,
     duplicatedPhantom,
+    setCategories,
+    setPhantoms,
   } = useApiHook();
 
-  const handleDeletePhantom = async (id: string) => {
+  const handleDeletePhantom = async (id: string): Promise<void> => {
     await deletePhantom(id);
-    await getCategories();
+    const categories = await getCategories();
+    setCategories(categories);
   };
   return (
     <Section>
       <h1 className='text-3xl font-extrabold'>Dashboard</h1>
       <div className='mt-9 flex flex-col lg:flex-row lg:gap-10'>
-        <FilterSideBar categories={categories} getCategories={getCategories} />
+        <FilterSideBar categories={categories} />
         <div className='flex flex-col gap-10 w-full'>
           {phantoms && (
             <PhantomList
               phantoms={phantoms}
+              setPhantoms={setPhantoms}
               getPhantoms={getPhantoms}
               deletePhantom={handleDeletePhantom}
               renamePhantom={renamePhantom}
