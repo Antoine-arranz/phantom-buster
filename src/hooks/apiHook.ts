@@ -12,30 +12,22 @@ import collectCategories from "../utils/collectCategories ";
 import { notifyError } from "../utils/notify";
 import { SearchParams } from "../interfaces/searchParams";
 
-export enum ApiEnum {
-  Phantom = "phantom",
-  Categorie = "categorie",
-}
-
 export const KEY = "phantom";
 
 /**
  * Custom hook for interacting with the API.
- * @template T - Type of the result returned by the API.
- * @param {ApiEnum} [api] - enum specifying the type of API.
- * @param {string[]} [categories] - Optional array of categories.
  * @returns {{
- *   result: T,
- *   getPhantoms: (categories?: string[]) => Promise<void>,
- *   deletePhantom: (id: string) => Promise<void>,
- *   getCategories: () => Promise<void>
+ *   phantoms: IPhantoms | undefined,
+ *   categories: string[] | undefined,
+ *   getPhantoms: (searchParams?: SearchParams) => void,
+ *   deletePhantom: (id: string) => void,
+ *   getCategories: () => void,
+ *   renamePhantom: (id: string, newName: string) => Promise<IPhantom[] | undefined>
  * }} - Object containing the hook's results and functions.
  */
-export const useApiHook = <T extends IPhantoms | string[]>(
-  api?: ApiEnum,
-  categories?: SearchParams
-): {
-  result: T;
+export const useApiHook = (): {
+  phantoms: IPhantoms | undefined;
+  categories: string[] | undefined;
   getPhantoms: (searchParams?: SearchParams) => void;
   deletePhantom: (id: string) => void;
   getCategories: () => void;
@@ -44,21 +36,24 @@ export const useApiHook = <T extends IPhantoms | string[]>(
     newName: string
   ) => Promise<IPhantom[] | undefined>;
 } => {
-  const [result, setResult] = useState<IPhantoms | string[]>();
+  const [phantoms, setPhantoms] = useState<IPhantoms>();
+  const [categories, setCategories] = useState<string[]>();
   const { setItem, getItem } = useLocalStorage();
 
   useEffect(() => {
     try {
-      if (api === ApiEnum.Phantom) {
-        getPhantoms(categories);
-      } else if (api === ApiEnum.Categorie) {
-        getCategories();
-      }
+      getPhantoms();
+      getCategories();
     } catch (error) {
       notifyError(error as unknown as string);
     }
-  }, [api, categories]);
+  }, []);
 
+  /**
+   * Fetches phantoms from the API and updates the state.
+   * @param {SearchParams} [searchParams] - Optional search parameters.
+   * @returns {void}
+   */
   const getPhantoms = async (categories: SearchParams = {}): Promise<void> => {
     const phantomCached = getItem(KEY);
     if (phantomCached) {
@@ -66,45 +61,60 @@ export const useApiHook = <T extends IPhantoms | string[]>(
         JSON.parse(phantomCached),
         categories
       );
-      setResult(phamtom);
+      setPhantoms(phamtom);
       return;
     }
     const phantoms = await getPhantomsApi(categories);
-    setResult(phantoms);
+    setPhantoms(phantoms);
     setItem(KEY, JSON.stringify(phantoms));
   };
 
+  /**
+   * Fetches categories from the API and updates the state.
+   * @returns {void}
+   */
   const getCategories = async () => {
     try {
       const phantomCached = getItem(KEY);
       if (phantomCached) {
         const categories = collectCategories(JSON.parse(phantomCached));
-        setResult(categories);
+        setCategories(categories);
         return;
       }
-      setResult(await getCategoriesApi());
+      setCategories(await getCategoriesApi());
     } catch (error) {
       notifyError(error as unknown as string);
     }
   };
 
+  /**
+   * Deletes a phantom by ID.
+   * @param {string} id - ID of the phantom to delete.
+   * @returns {void}
+   */
   const deletePhantom = async (id: string): Promise<void> => {
     try {
       const phantomCached = getItem(KEY);
       if (phantomCached) {
         const phantoms = await deletePhantomApi(id, JSON.parse(phantomCached));
-        setResult(phantoms);
+        setPhantoms(phantoms);
         setItem(KEY, JSON.stringify(phantoms));
         return;
       }
       const phantoms = await deletePhantomApi(id);
-      setResult(phantoms);
+      setPhantoms(phantoms);
       setItem(KEY, JSON.stringify(phantoms));
     } catch (error) {
       notifyError(error as unknown as string);
     }
   };
 
+  /**
+   * Renames a phantom.
+   * @param {string} id - ID of the phantom to rename.
+   * @param {string} newName - New name for the phantom.
+   * @returns {Promise<IPhantom[] | undefined>} - Updated list of phantoms.
+   */
   const renamePhantom = async (
     id: string,
     newName: string
@@ -112,15 +122,13 @@ export const useApiHook = <T extends IPhantoms | string[]>(
     try {
       const phantomCached = getItem(KEY);
       if (phantomCached) {
-        console.log("ici ???");
         const phantoms = await renamePhantomApi(
           JSON.parse(phantomCached),
           id,
           newName
         );
         if (phantoms) {
-          console.log("phan", phantoms);
-          setResult(phantoms);
+          setPhantoms(phantoms);
           setItem(KEY, JSON.stringify(phantoms));
           return phantoms;
         }
@@ -131,7 +139,8 @@ export const useApiHook = <T extends IPhantoms | string[]>(
   };
 
   return {
-    result: result as T,
+    phantoms,
+    categories,
     getPhantoms,
     deletePhantom,
     getCategories,
