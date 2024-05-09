@@ -3,6 +3,7 @@ import data from "../data/phantoms.json";
 import { SearchParams } from "../interfaces/searchParams";
 import collectCategories from "../utils/collectCategories ";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
+import { generateUniqueId } from "../utils/generateUniqueId";
 
 export const getPhantomsApi = (
   categories?: SearchParams
@@ -65,7 +66,29 @@ export const renamePhantomApi = (
       phantom[index].name = newName;
       resolve(phantom as IPhantoms);
     } else {
-      reject(new Error("Phantom not found")); // Rejeter la promesse si le Phantom n'est pas trouvé
+      reject(new Error("Phantom not found"));
+    }
+  });
+};
+
+export const duplicatePhantomApi = (
+  phantoms: IPhantoms,
+  id: string
+): Promise<IPhantoms> => {
+  return new Promise((resolve, reject) => {
+    const index = phantoms.findIndex((phantom) => phantom.id === id);
+
+    if (index !== -1) {
+      const phantomToDuplicate = phantoms[index];
+      const duplicatedPhantom = { ...phantomToDuplicate };
+
+      duplicatedPhantom.id = generateUniqueId();
+
+      phantoms.splice(index + 1, 0, duplicatedPhantom);
+
+      resolve(phantoms);
+    } else {
+      reject(new Error("Phantom not found"));
     }
   });
 };

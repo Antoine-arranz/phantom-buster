@@ -6,24 +6,27 @@ import { IPhantom } from "../../data/phantoms";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import { useClickOutside } from "../../hooks/clickOutside";
+import { notifyError } from "../../utils/notify";
 
 interface PhantomCardProps {
   phantom: IPhantom;
   handleDeletePhantom: (id: string) => void;
   renamePhantom: (id: string, input: string) => void;
+  duplicatedPhantom: (id: string) => void;
 }
 
 const PhantomCard = ({
   phantom,
   handleDeletePhantom,
   renamePhantom,
+  duplicatedPhantom,
 }: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
   const [timeRemain, setTimeRemain] = useState<number>(
     phantom.nextLaunchIn || 0
   );
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>(phantom.name);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
   useClickOutside(dropDownRef, () => closeDropDownMenu());
@@ -85,10 +88,18 @@ const PhantomCard = ({
   };
 
   const handleValidateRename = async () => {
-    renamePhantom(phantom.id, inputValue);
-    closeModal();
+    if (inputValue) {
+      renamePhantom(phantom.id, inputValue);
+      closeModal();
+      return;
+    }
+    notifyError("Phantom name cannot be empty");
   };
 
+  const handleDuplicatePhantom = async (id: string) => {
+    duplicatedPhantom(id);
+    setToggleMenuOpen(false);
+  };
   const dropDownMenu = (
     <div className='relative'>
       <label tabIndex={0} className='' onClick={toggleMenu}>
@@ -106,7 +117,9 @@ const PhantomCard = ({
               </Button>
             </li>
             <li>
-              <label>Duplicate</label>
+              <Button handleOnClick={() => handleDuplicatePhantom(phantom.id)}>
+                Duplicate
+              </Button>
             </li>
 
             <li>
@@ -134,12 +147,15 @@ const PhantomCard = ({
         <input
           className='pl-5 rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
           type='text'
-          placeholder=''
+          value={inputValue}
           name='modal'
           onChange={handleInputChange}
         />
         <div className='flex justify-end mt-4 border-1'>
-          <Button className='mr-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'>
+          <Button
+            handleOnClick={closeModal}
+            className='mr-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
+          >
             Cancel
           </Button>
           <Button
