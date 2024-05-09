@@ -13,6 +13,7 @@ interface PhantomListProps {
   getPhantoms: (searchParams?: SearchParams | undefined) => void;
   deletePhantom: (id: string) => void;
   renamePhantom: (id: string, value: string) => void;
+  duplicatedPhantom: (id: string) => void;
 }
 
 const PhantomList = ({
@@ -20,6 +21,7 @@ const PhantomList = ({
   getPhantoms,
   deletePhantom,
   renamePhantom,
+  duplicatedPhantom,
 }: PhantomListProps) => {
   const [searchParams] = useSearchParams();
 
@@ -33,6 +35,10 @@ const PhantomList = ({
     await retrievePhantomsWithParams();
   };
 
+  const onDuplicatePhantom = async (id: string) => {
+    await duplicatedPhantom(id);
+    await retrievePhantomsWithParams();
+  };
   const retrievePhantomsWithParams = async () => {
     const platformFilter = searchParams.get("Platforms");
     const searchFilter = searchParams.get(SEARCH_KEY);
@@ -61,6 +67,7 @@ const PhantomList = ({
           <PhantomCard
             renamePhantom={onRenamePhantom}
             handleDeletePhantom={onDeletePhantom}
+            duplicatedPhantom={onDuplicatePhantom}
             key={index}
             phantom={phantom}
           />

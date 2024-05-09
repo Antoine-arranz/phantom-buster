@@ -12,6 +12,7 @@ const Dashboard = () => {
     deletePhantom,
     getCategories,
     renamePhantom,
+    duplicatedPhantom,
   } = useApiHook();
 
   const handleDeletePhantom = async (id: string) => {
@@ -30,6 +31,7 @@ const Dashboard = () => {
               getPhantoms={getPhantoms}
               deletePhantom={handleDeletePhantom}
               renamePhantom={renamePhantom}
+              duplicatedPhantom={duplicatedPhantom}
             />
           )}
         </div>

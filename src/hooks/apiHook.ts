@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import {
   deletePhantomApi,
+  duplicatePhantomApi,
   getCategoriesApi,
   getPhantomsApi,
   renamePhantomApi,
 } from "../api/dashboard";
-import { IPhantom, IPhantoms } from "../data/phantoms";
+import { IPhantoms } from "../data/phantoms";
 import { useLocalStorage } from "./localStorageHook";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 import collectCategories from "../utils/collectCategories ";
@@ -22,7 +23,9 @@ export const KEY = "phantom";
  *   getPhantoms: (searchParams?: SearchParams) => void,
  *   deletePhantom: (id: string) => void,
  *   getCategories: () => void,
- *   renamePhantom: (id: string, newName: string) => Promise<IPhantom[] | undefined>
+ *   renamePhantom: (id: string, newName: string) => Promise<void>
+ *   duplicatedPhantom: (id: string) => Promise<void>
+
  * }} - Object containing the hook's results and functions.
  */
 export const useApiHook = (): {
@@ -31,10 +34,8 @@ export const useApiHook = (): {
   getPhantoms: (searchParams?: SearchParams) => void;
   deletePhantom: (id: string) => void;
   getCategories: () => void;
-  renamePhantom: (
-    id: string,
-    newName: string
-  ) => Promise<IPhantom[] | undefined>;
+  renamePhantom: (id: string, newName: string) => Promise<void>;
+  duplicatedPhantom: (id: string) => Promise<void>;
 } => {
   const [phantoms, setPhantoms] = useState<IPhantoms>();
   const [categories, setCategories] = useState<string[]>();
@@ -113,12 +114,9 @@ export const useApiHook = (): {
    * Renames a phantom.
    * @param {string} id - ID of the phantom to rename.
    * @param {string} newName - New name for the phantom.
-   * @returns {Promise<IPhantom[] | undefined>} - Updated list of phantoms.
+   * @returns {Promise<void>} - Updated list of phantoms.
    */
-  const renamePhantom = async (
-    id: string,
-    newName: string
-  ): Promise<IPhantom[] | undefined> => {
+  const renamePhantom = async (id: string, newName: string): Promise<void> => {
     try {
       const phantomCached = getItem(KEY);
       if (phantomCached) {
@@ -130,8 +128,23 @@ export const useApiHook = (): {
         if (phantoms) {
           setPhantoms(phantoms);
           setItem(KEY, JSON.stringify(phantoms));
-          return phantoms;
         }
+      }
+    } catch (error) {
+      notifyError(error as unknown as string);
+    }
+  };
+
+  const duplicatedPhantom = async (id: string): Promise<void> => {
+    try {
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        const phantoms = await duplicatePhantomApi(
+          JSON.parse(phantomCached),
+          id
+        );
+        setPhantoms(phantoms);
+        setItem(KEY, JSON.stringify(phantoms));
       }
     } catch (error) {
       notifyError(error as unknown as string);
@@ -145,5 +158,6 @@ export const useApiHook = (): {
     deletePhantom,
     getCategories,
     renamePhantom,
+    duplicatedPhantom,
   };
 };
