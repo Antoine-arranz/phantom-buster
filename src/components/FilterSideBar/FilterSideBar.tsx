@@ -6,10 +6,6 @@ import CategoriesFilter from "../CategoriesFilter/CategoriesFilter";
 import SearchBar from "../SearchBar/SearchBar";
 import { useLocalStorage } from "../../hooks/localStorageHook";
 
-export interface FilterSideBarProps {
-  categories: Array<string>;
-}
-
 enum LaunchType {
   Automatic = "Automatic",
   Manual = "Manual",
@@ -22,9 +18,14 @@ enum Activity {
   InError = "In Error",
 }
 
+interface PhantomListProps {
+  categories: string[] | undefined;
+  getCategories: () => void;
+}
+
 export const PLATFORMS = "Platforms";
 
-const FilterSideBar = ({ categories }: FilterSideBarProps) => {
+const FilterSideBar = ({ categories }: PhantomListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { removeItem } = useLocalStorage();
 
@@ -33,7 +34,6 @@ const FilterSideBar = ({ categories }: FilterSideBarProps) => {
   };
 
   const onClickClearFilters = () => {
-    console.log("ici");
     setSearchParams("");
   };
 

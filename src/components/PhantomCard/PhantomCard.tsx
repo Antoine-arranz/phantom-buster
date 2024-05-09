@@ -5,16 +5,19 @@ import "./phantomCard.css";
 import { IPhantom } from "../../data/phantoms";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
-import SearchBar from "../SearchBar/SearchBar";
 import { useClickOutside } from "../../hooks/clickOutside";
-import { ApiEnum, useApiHook } from "../../hooks/apiHook";
 
 interface PhantomCardProps {
   phantom: IPhantom;
   handleDeletePhantom: (id: string) => void;
+  renamePhantom: (id: string, input: string) => void;
 }
 
-const PhantomCard = ({ phantom, handleDeletePhantom }: PhantomCardProps) => {
+const PhantomCard = ({
+  phantom,
+  handleDeletePhantom,
+  renamePhantom,
+}: PhantomCardProps) => {
   const [isToggleMenuOpen, setToggleMenuOpen] = useState(false);
   const [isLaunched, setIsLaunched] = useState(false);
   const [timeRemain, setTimeRemain] = useState<number>(
@@ -24,7 +27,6 @@ const PhantomCard = ({ phantom, handleDeletePhantom }: PhantomCardProps) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
   useClickOutside(dropDownRef, () => closeDropDownMenu());
-  const { renamePhantom } = useApiHook();
 
   const formatTimeRemain = (timeRemain: number) => {
     const hours = Math.floor(timeRemain / 3600);

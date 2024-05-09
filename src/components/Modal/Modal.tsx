@@ -1,6 +1,5 @@
 import { ReactNode, useRef } from "react";
 import { useClickOutside } from "../../hooks/clickOutside";
-import Button from "../Button/Button";
 
 interface ModalProps {
   title: string;

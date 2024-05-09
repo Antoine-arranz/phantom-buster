@@ -31,11 +31,6 @@ export const getCategoriesApi = (): Promise<string[]> => {
   });
 };
 
-export const deletePhantom = (): IPhantoms => {
-  setTimeout(() => console.log("fetching deletePhantom"), 200);
-  return data as IPhantoms;
-};
-
 export const deletePhantomApi = (
   id: string,
   phantoms?: IPhantoms
@@ -66,7 +61,6 @@ export const renamePhantomApi = (
 ): Promise<IPhantoms> => {
   return new Promise((resolve, reject) => {
     const index = phantom.findIndex((item) => item.id === id);
-    console.log(index, id);
     if (index !== -1) {
       phantom[index].name = newName;
       resolve(phantom as IPhantoms);
