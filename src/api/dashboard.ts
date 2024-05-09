@@ -58,3 +58,20 @@ export const deletePhantomApi = (
     }
   });
 };
+
+export const renamePhantomApi = (
+  phantom: IPhantoms,
+  id: string,
+  newName: string
+): Promise<IPhantoms> => {
+  return new Promise((resolve, reject) => {
+    const index = phantom.findIndex((item) => item.id === id);
+    console.log(index, id);
+    if (index !== -1) {
+      phantom[index].name = newName;
+      resolve(phantom as IPhantoms);
+    } else {
+      reject(new Error("Phantom not found")); // Rejeter la promesse si le Phantom n'est pas trouvé
+    }
+  });
+};

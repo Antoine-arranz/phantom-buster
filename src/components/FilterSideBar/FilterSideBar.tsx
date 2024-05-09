@@ -33,6 +33,7 @@ const FilterSideBar = ({ categories }: FilterSideBarProps) => {
   };
 
   const onClickClearFilters = () => {
+    console.log("ici");
     setSearchParams("");
   };
 
