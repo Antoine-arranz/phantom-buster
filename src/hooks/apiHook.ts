@@ -3,8 +3,9 @@ import {
   deletePhantomApi,
   getCategoriesApi,
   getPhantomsApi,
+  renamePhantomApi,
 } from "../api/dashboard";
-import { IPhantoms } from "../data/phantoms";
+import { IPhantom, IPhantoms } from "../data/phantoms";
 import { useLocalStorage } from "./localStorageHook";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 import collectCategories from "../utils/collectCategories ";
@@ -31,13 +32,17 @@ export const KEY = "phantom";
  * }} - Object containing the hook's results and functions.
  */
 export const useApiHook = <T extends IPhantoms | string[]>(
-  api: ApiEnum,
+  api?: ApiEnum,
   categories?: SearchParams
 ): {
   result: T;
   getPhantoms: (searchParams?: SearchParams) => void;
   deletePhantom: (id: string) => void;
   getCategories: () => void;
+  renamePhantom: (
+    id: string,
+    newName: string
+  ) => Promise<IPhantom[] | undefined>;
 } => {
   const [result, setResult] = useState<IPhantoms | string[]>();
   const { setItem, getItem } = useLocalStorage();
@@ -100,5 +105,36 @@ export const useApiHook = <T extends IPhantoms | string[]>(
     }
   };
 
-  return { result: result as T, getPhantoms, deletePhantom, getCategories };
+  const renamePhantom = async (
+    id: string,
+    newName: string
+  ): Promise<IPhantom[] | undefined> => {
+    try {
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        console.log("ici ???");
+        const phantoms = await renamePhantomApi(
+          JSON.parse(phantomCached),
+          id,
+          newName
+        );
+        if (phantoms) {
+          console.log("phan", phantoms);
+          setResult(phantoms);
+          setItem(KEY, JSON.stringify(phantoms));
+          return phantoms;
+        }
+      }
+    } catch (error) {
+      notifyError(error as unknown as string);
+    }
+  };
+
+  return {
+    result: result as T,
+    getPhantoms,
+    deletePhantom,
+    getCategories,
+    renamePhantom,
+  };
 };

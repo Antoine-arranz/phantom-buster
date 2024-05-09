@@ -10,6 +10,7 @@ interface PhantomListProps {
 }
 
 const PhantomList = ({ phantoms, handleDeletePhantom }: PhantomListProps) => {
+  console.log("??", phantoms);
   return (
     <Fragment>
       <div className='border-dashed border border-gray-500 text-center p-7 rounded-xl'>
@@ -24,7 +25,7 @@ const PhantomList = ({ phantoms, handleDeletePhantom }: PhantomListProps) => {
           <PhantomCard
             handleDeletePhantom={handleDeletePhantom}
             key={index}
-            phantomCard={phantom}
+            phantom={phantom}
           />
         ))}
     </Fragment>

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import PhantomList from "../../components/PhantomList/PhantomList";
 import FilterSideBar from "../../components/FilterSideBar/FilterSideBar";
 import { SEARCH_KEY } from "../../components/SearchBar/SearchBar";
+import { useLocalStorage } from "../../hooks/localStorageHook";
 
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
