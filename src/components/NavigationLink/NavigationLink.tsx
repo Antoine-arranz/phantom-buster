@@ -1,6 +1,7 @@
 import { VariantProps, cva } from "class-variance-authority";
 import { AnchorHTMLAttributes, ReactNode } from "react";
 import { NavLink } from "react-router-dom";
+import path from "../../router/path";
 
 export interface NavigationLinkProps
   extends AnchorHTMLAttributes<HTMLButtonElement>,
@@ -12,7 +13,7 @@ export interface NavigationLinkProps
 
 const NavigationLink = ({ children, className }: NavigationLinkProps) => {
   return (
-    <NavLink className={className} to='/dashboard'>
+    <NavLink className={className} to={path.dashboard}>
       {children}
     </NavLink>
   );

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import path from "../../router/path";
 
 const NotFound = () => (
   <div className=' h-[calc(100vh-200px)] bg-base-200 flex justify-center items-center'>
@@ -6,7 +7,7 @@ const NotFound = () => (
       <h1 className='text-5xl font-bold'>Page not found</h1>
       <Link
         className='flex m-auto px-2 py-1 text-white  bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
-        to={"/dashboard"}
+        to={path.dashboard}
       >
         Return to the dashboard
       </Link>

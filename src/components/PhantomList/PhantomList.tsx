@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { SEARCH_KEY } from "../SearchBar/SearchBar";
 import { useEffect } from "react";
 import { SearchParams } from "../../interfaces/searchParams";
+import { notifyError } from "../../utils/notify";
 
 interface PhantomListProps {
   phantoms: IPhantoms;
@@ -67,7 +68,10 @@ const PhantomList = ({
       <div className='mt-4 border-dashed border border-gray-500 text-center p-7 rounded-xl'>
         <PhantomLogoSVG className='m-auto' size={50}></PhantomLogoSVG>
 
-        <Button className=' flex m-auto mt-4 px-2 py-1 text-white  bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'>
+        <Button
+          handleOnClick={() => notifyError("Working progress")}
+          className=' flex m-auto mt-4 px-2 py-1 text-white  bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
+        >
           Use a new Phantom
         </Button>
       </div>

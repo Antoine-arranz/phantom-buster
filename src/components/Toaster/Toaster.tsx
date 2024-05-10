@@ -4,7 +4,7 @@ const Toaster = () => {
   return (
     <ToastContainer
       autoClose={5000}
-      hideProgressBar={false}
+      hideProgressBar
       position='top-center'
       theme='dark'
     />

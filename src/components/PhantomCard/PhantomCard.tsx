@@ -9,6 +9,7 @@ import { useClickOutside } from "../../hooks/clickOutside";
 import { notifyError } from "../../utils/notify";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import path from "../../router/path";
 
 interface PhantomCardProps {
   phantom: IPhantom;
@@ -128,12 +129,12 @@ const PhantomCard = ({
             </li>
 
             <li>
-              <label
-                onClick={() => onDeletePhantom(phantom.id)}
-                className=' text-error '
+              <Button
+                handleOnClick={() => onDeletePhantom(phantom.id)}
+                className=' cursor-pointer'
               >
                 Delete
-              </label>
+              </Button>
             </li>
           </ul>
         </div>
@@ -155,7 +156,7 @@ const PhantomCard = ({
         content='Phantom'
       >
         <input
-          className='pl-5 rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
+          className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
           type='text'
           value={inputValue}
           name='modal'
@@ -164,13 +165,13 @@ const PhantomCard = ({
         <div className='flex justify-end mt-4 border-1'>
           <Button
             handleOnClick={closeModal}
-            className='mr-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
+            className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400'
           >
             Cancel
           </Button>
           <Button
             handleOnClick={handleValidateRename}
-            className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400'
+            className='ml-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
           >
             OK
           </Button>

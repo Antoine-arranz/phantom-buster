@@ -4,6 +4,13 @@ type SvgProps = {
   className?: string;
 };
 
+enum DIRECTION {
+  LEFT = "left",
+  RIGHT = "right",
+  TOP = "top",
+  BOTTOM = "bottom",
+}
+
 const PhantomLogoSVG = ({ size = 28, className = "" }: SvgProps) => {
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
@@ -14,15 +21,16 @@ const PhantomLogoSVG = ({ size = 28, className = "" }: SvgProps) => {
     const interval = setInterval(() => {
       const randomX = Math.random() * 10 - 5;
       const randomY = Math.random() * 10 - 5;
-      const horizontalDirection = randomX >= 0 ? "droite" : "gauche";
-      const verticalDirection = randomY >= 0 ? "bas" : "haut";
+      const horizontalDirection =
+        randomX >= 0 ? DIRECTION.RIGHT : DIRECTION.LEFT;
+      const verticalDirection = randomY >= 0 ? DIRECTION.BOTTOM : DIRECTION.TOP;
 
-      if (horizontalDirection === "gauche") {
+      if (horizontalDirection === DIRECTION.LEFT) {
         setTranslateX(-0.5);
       } else {
         setTranslateX(0.5);
       }
-      if (verticalDirection === "haut") {
+      if (verticalDirection === DIRECTION.TOP) {
         setTranslateY(-0.5);
       } else {
         setTranslateY(0.5);

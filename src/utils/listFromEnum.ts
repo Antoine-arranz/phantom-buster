@@ -1,4 +1,4 @@
-const createListFromEnum = (enumObj: any): string[] => {
+const createListFromEnum = (enumObj: Record<string, string>): string[] => {
   const enumKeys = Object.keys(enumObj).filter((key) =>
     isNaN(Number(enumObj[key]))
   );
