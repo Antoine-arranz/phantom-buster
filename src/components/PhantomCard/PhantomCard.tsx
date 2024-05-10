@@ -96,6 +96,7 @@ const PhantomCard = ({
   const handleValidateRename = async () => {
     if (inputValue) {
       renamePhantom(phantom.id, inputValue);
+      setInputValue(inputValue);
       closeModal();
       return;
     }
