@@ -1,7 +1,7 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { HTMLProps, ReactNode } from "react";
 import FilterButton from "../FilterButton/FilterButton";
 
-interface CategoriesListProps extends HTMLAttributes<HTMLUListElement> {
+interface CategoriesListProps extends HTMLProps<HTMLUListElement> {
   children: ReactNode;
   onClick: () => void;
   isActive: boolean;

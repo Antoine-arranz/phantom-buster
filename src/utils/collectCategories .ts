@@ -1,8 +1,8 @@
 import { IPhantoms } from "../data/phantoms";
 
-const collectCategories = (data: IPhantoms): string[] => {
+const collectCategories = (phantoms: IPhantoms): string[] => {
   const categories = new Set<string>();
-  data.forEach((phantom) => {
+  phantoms.forEach((phantom) => {
     const itemCategories = phantom.manifest.tags.categories;
     itemCategories.forEach((category) => categories.add(category));
   });

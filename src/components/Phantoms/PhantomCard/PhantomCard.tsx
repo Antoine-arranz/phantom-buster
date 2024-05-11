@@ -1,15 +1,14 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { MoreDotsSVG } from "../Logo/MoreDots";
+import { MoreDotsSVG } from "../../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
-import { IPhantom } from "../../data/phantoms";
-import Button from "../Button/Button";
-import Modal from "../Modal/Modal";
-import { useClickOutside } from "../../hooks/clickOutside";
-import { notifyError } from "../../utils/notify";
+import { IPhantom } from "../../../data/phantoms";
+import Button from "../../Button/Button";
+import Modal from "../../Modal/Modal";
+import { useClickOutside } from "../../../hooks/clickOutside";
+import { notifyError } from "../../../utils/notify";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import path from "../../router/path";
 
 interface PhantomCardProps {
   phantom: IPhantom;
@@ -130,10 +129,7 @@ const PhantomCard = ({
             </li>
 
             <li>
-              <Button
-                handleOnClick={() => onDeletePhantom(phantom.id)}
-                className=' cursor-pointer'
-              >
+              <Button handleOnClick={() => onDeletePhantom(phantom.id)}>
                 Delete
               </Button>
             </li>
@@ -143,6 +139,37 @@ const PhantomCard = ({
     </div>
   );
 
+  const modalView = (
+    <Modal
+      open={isModalOpen}
+      close={closeModal}
+      title='Edit Phantom name'
+      content='Phantom'
+    >
+      <input
+        className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
+        type='text'
+        value={inputValue}
+        name='modal'
+        onChange={handleInputChange}
+      />
+      <div className='flex justify-end mt-4 border-1'>
+        <Button
+          handleOnClick={closeModal}
+          className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400'
+        >
+          Cancel
+        </Button>
+        <Button
+          handleOnClick={handleValidateRename}
+          className='ml-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
+        >
+          OK
+        </Button>
+      </div>
+    </Modal>
+  );
+
   return (
     <div
       className={clsx(
@@ -150,40 +177,13 @@ const PhantomCard = ({
         className
       )}
     >
-      <Modal
-        open={isModalOpen}
-        close={closeModal}
-        title='Edit Phantom name'
-        content='Phantom'
-      >
-        <input
-          className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
-          type='text'
-          value={inputValue}
-          name='modal'
-          onChange={handleInputChange}
-        />
-        <div className='flex justify-end mt-4 border-1'>
-          <Button
-            handleOnClick={closeModal}
-            className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400'
-          >
-            Cancel
-          </Button>
-          <Button
-            handleOnClick={handleValidateRename}
-            className='ml-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
-          >
-            OK
-          </Button>
-        </div>
-      </Modal>
+      {modalView}
       <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
         <div className='flex sm:gap-5 flex-wrap'>
           {phantom.manifest.tags.categories.map((category) => (
             <Button
               key={category}
-              className='border rounded-xl p-3 text-bcg-filter font-bold'
+              className='border rounded-xl p-3 cursor-default text-bcg-filter font-bold'
             >
               {category}
             </Button>

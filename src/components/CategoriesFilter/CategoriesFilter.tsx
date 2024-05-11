@@ -8,6 +8,7 @@ export interface CategoriesFilterProps {
 const CategoriesFilter = ({ title, categories }: CategoriesFilterProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categorySearchParams = searchParams.get(title);
+
   const handleItemClick = (index: number, isActive: boolean) => {
     setSearchParams((prev) => {
       if (isActive) {

@@ -1,21 +1,21 @@
 import { Fragment } from "react/jsx-runtime";
-import { IPhantoms } from "../../data/phantoms";
+import { IPhantoms } from "../../../data/phantoms";
 import PhantomCard from "../PhantomCard/PhantomCard";
-import Button from "../Button/Button";
-import { PhantomLogoSVG } from "../Logo/PhantomBuster";
+import Button from "../../Button/Button";
+import { PhantomLogoSVG } from "../../Logo/PhantomBuster";
 import { useSearchParams } from "react-router-dom";
-import { SEARCH_KEY } from "../SearchBar/SearchBar";
+import { SEARCH_KEY } from "../../SearchBar/SearchBar";
 import { useEffect } from "react";
-import { SearchParams } from "../../interfaces/searchParams";
-import { notifyError } from "../../utils/notify";
+import { SearchParams } from "../../../interfaces/searchParams";
+import { notifyError } from "../../../utils/notify";
+import PhantomNotFound from "../PhantomNotFound/PhantomNotFound";
 
 interface PhantomListProps {
   phantoms: IPhantoms;
-  getPhantoms: (searchParams?: SearchParams) => Promise<IPhantoms>;
+  getPhantoms: (searchParams?: SearchParams) => Promise<void>;
   deletePhantom: (id: string) => Promise<void>;
   renamePhantom: (id: string, value: string) => Promise<void>;
   duplicatedPhantom: (id: string) => Promise<void>;
-  setPhantoms: React.Dispatch<React.SetStateAction<IPhantoms | undefined>>;
 }
 
 const PhantomList = ({
@@ -24,7 +24,6 @@ const PhantomList = ({
   deletePhantom,
   renamePhantom,
   duplicatedPhantom,
-  setPhantoms,
 }: PhantomListProps) => {
   const [searchParams] = useSearchParams();
 
@@ -45,18 +44,11 @@ const PhantomList = ({
   const retrievePhantomsWithParams = async () => {
     const platformFilter = searchParams.get("Platforms");
     const searchFilter = searchParams.get(SEARCH_KEY);
-    if (platformFilter || searchFilter) {
-      const phantoms = await getPhantoms({
-        platform: platformFilter,
-        search: searchFilter,
-      });
-      if (phantoms) {
-        setPhantoms(phantoms);
-      }
-    } else {
-      const phantoms = await getPhantoms();
-      setPhantoms(phantoms);
-    }
+
+    await getPhantoms({
+      platform: platformFilter,
+      search: searchFilter,
+    });
   };
 
   useEffect(() => {
@@ -75,7 +67,7 @@ const PhantomList = ({
           Use a new Phantom
         </Button>
       </div>
-      {phantoms &&
+      {phantoms && phantoms.length ? (
         phantoms.map((phantom, index) => (
           <PhantomCard
             renamePhantom={onRenamePhantom}
@@ -84,7 +76,12 @@ const PhantomList = ({
             key={index}
             phantom={phantom}
           />
-        ))}
+        ))
+      ) : (
+        <PhantomNotFound
+          message={"No phantom change filter or add a new one"}
+        />
+      )}
     </Fragment>
   );
 };

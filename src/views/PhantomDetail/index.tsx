@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useApiHook } from "../../hooks/apiHook";
 import { useParams } from "react-router-dom";
-import PhantomCard from "../../components/PhantomCard/PhantomCard";
+import PhantomCard from "../../components/Phantoms/PhantomCard/PhantomCard";
+import PhantomNotFound from "../../components/Phantoms/PhantomNotFound/PhantomNotFound";
 
 type PhantomDetailParams = {
   id: string;
@@ -14,30 +15,27 @@ const PhantomDetail = () => {
     duplicatedPhantom,
     deletePhantom,
     renamePhantom,
-    setPhantom,
   } = useApiHook();
   const params = useParams<PhantomDetailParams>();
 
   useEffect(() => {
     if (params.id) {
-      getPhantomById(params.id).then((phantom) => setPhantom(phantom));
+      getPhantomById(params.id);
     }
   }, []);
 
   const onRenamePhantom = async (id: string, newName: string) => {
     await renamePhantom(id, newName);
-    const phantom = await getPhantomById(id);
-    setPhantom(phantom);
+    await getPhantomById(id);
   };
 
   const onDeletePhantom = async (id: string) => {
     await deletePhantom(id);
-    const phantom = await getPhantomById(id);
-    setPhantom(phantom);
+    await getPhantomById(id);
   };
   return (
     <div className='bg-bcg-primary  p-10 h-[calc(100vh-200px)]'>
-      {phantom && (
+      {phantom ? (
         <PhantomCard
           className='mt-20'
           phantom={phantom}
@@ -45,6 +43,8 @@ const PhantomDetail = () => {
           renamePhantom={onRenamePhantom}
           handleDeletePhantom={onDeletePhantom}
         ></PhantomCard>
+      ) : (
+        <PhantomNotFound message='Phantom not found' linkToDashboard />
       )}
     </div>
   );

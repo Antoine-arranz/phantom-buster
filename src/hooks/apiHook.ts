@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   deletePhantomApi,
   duplicatePhantomApi,
@@ -22,80 +22,66 @@ export const KEY = "phantom";
  *   phantoms: IPhantoms | undefined,
  *   phantom: IPhantom | undefined,
  *   categories: string[] | undefined,
- *   getPhantoms: (searchParams?: SearchParams) => Promise<IPhantoms>,
+ *   getPhantoms: (searchParams?: SearchParams) => Promise<void>,
  *   deletePhantom: (id: string) => Promise<void>,
- *   getCategories: () => Promise<string[] | undefined>,
- *   setCategories: React.Dispatch<React.SetStateAction<string[] | undefined>>,
+ *   getCategories: () => Promise<void>,
  *   renamePhantom: (id: string, newName: string) => Promise<void>,
  *   duplicatedPhantom: (id: string) => Promise<void>,
- *   getPhantomById: (id: string) => Promise<IPhantom | undefined>,
- *   setPhantom: React.Dispatch<React.SetStateAction<IPhantom | undefined>>,
- *   setPhantoms: React.Dispatch<React.SetStateAction<IPhantoms | undefined>>
+ *   getPhantomById: (id: string) => Promise<void>,
  * }} - Object containing the hook's results and functions.
  */
 export const useApiHook = (): {
   phantoms: IPhantoms | undefined;
   phantom: IPhantom | undefined;
   categories: string[] | undefined;
-  getPhantoms: (searchParams?: SearchParams) => Promise<IPhantoms>;
+  getPhantoms: (searchParams?: SearchParams) => Promise<void>;
   deletePhantom: (id: string) => void;
-  getCategories: () => Promise<string[] | undefined>;
-  setCategories: React.Dispatch<React.SetStateAction<string[] | undefined>>;
+  getCategories: () => Promise<void>;
   renamePhantom: (id: string, newName: string) => Promise<void>;
   duplicatedPhantom: (id: string) => Promise<void>;
-  getPhantomById: (id: string) => Promise<IPhantom | undefined>;
-  setPhantom: React.Dispatch<React.SetStateAction<IPhantom | undefined>>;
-  setPhantoms: React.Dispatch<React.SetStateAction<IPhantoms | undefined>>;
+  getPhantomById: (id: string) => Promise<void>;
 } => {
-  const [phantoms, setPhantoms] = useState<IPhantoms>();
-  const [categories, setCategories] = useState<string[]>();
+  const [phantoms, setPhantoms] = useState<IPhantoms>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const { setItem, getItem } = useLocalStorage();
   const [phantom, setPhantom] = useState<IPhantom>();
 
-  useEffect(() => {
+  /**
+   * Fetches phantoms from the API and updates the state.
+   * @param {SearchParams} [categories={}] - Optional search parameters.
+   * @returns {Promise<void>} - Promise resolving once the phantoms are fetched and the state is updated.
+   */
+  const getPhantoms = async (categories: SearchParams = {}): Promise<void> => {
     try {
-      getPhantoms().then((phantom) => setPhantoms(phantom));
-      getCategories().then((categories) => setCategories(categories));
+      let result = phantoms;
+      const phantomCached = getItem(KEY);
+      if (phantomCached) {
+        result = filterPhantomByCategory(JSON.parse(phantomCached), categories);
+      } else {
+        result = await getPhantomsApi(categories);
+        setItem(KEY, JSON.stringify(result));
+      }
+      setPhantoms(result);
     } catch (error) {
       notifyError(error as unknown as string);
     }
-  }, []);
-
-  /**
-   * Fetches phantoms from the API and updates the state.
-   * @param {SearchParams} [categories] - Optional search parameters.
-   * @returns {Promise<IPhantoms>} - Promise resolving to the fetched phantoms.
-   */
-  const getPhantoms = async (
-    categories: SearchParams = {}
-  ): Promise<IPhantoms> => {
-    const phantomCached = getItem(KEY);
-    if (phantomCached) {
-      const phamtoms = filterPhantomByCategory(
-        JSON.parse(phantomCached),
-        categories
-      );
-      return phamtoms;
-    }
-    const phantoms = await getPhantomsApi(categories);
-    setItem(KEY, JSON.stringify(phantoms));
-
-    return phantoms;
   };
 
   /**
    * Fetches categories from the API and updates the state.
-   * @returns {Promise<string[] | undefined>} - Promise resolving to the fetched categories or undefined if an error occurs.
+   * @returns {Promise<void>} - Promise resolving to the fetched categories and the state is updated
    */
-  const getCategories = async (): Promise<string[] | undefined> => {
+  const getCategories = async (): Promise<void> => {
     try {
+      let newCategories = categories;
       const phantomCached = getItem(KEY);
+
       if (phantomCached) {
-        const categories = collectCategories(JSON.parse(phantomCached));
-        return categories;
+        newCategories = collectCategories(JSON.parse(phantomCached));
+      } else {
+        newCategories = await getCategoriesApi();
       }
-      const categories = await getCategoriesApi();
-      return categories;
+      setCategories(newCategories);
     } catch (error) {
       notifyError(error as unknown as string);
     }
@@ -104,18 +90,18 @@ export const useApiHook = (): {
   /**
    * Deletes a phantom by ID.
    * @param {string} id - ID of the phantom to delete.
-   * @returns {Promise<void>} - Promise resolving once the deletion is completed.
+   * @returns {Promise<void>} - Promise resolving once the deletion is completed and the local storage is updated.
    */
   const deletePhantom = async (id: string): Promise<void> => {
     try {
+      let result = phantoms;
       const phantomCached = getItem(KEY);
       if (phantomCached) {
-        const phantoms = await deletePhantomApi(id, JSON.parse(phantomCached));
-        setItem(KEY, JSON.stringify(phantoms));
-        return;
+        result = await deletePhantomApi(id, JSON.parse(phantomCached));
+      } else {
+        result = await deletePhantomApi(id);
       }
-      const phantoms = await deletePhantomApi(id);
-      setItem(KEY, JSON.stringify(phantoms));
+      setItem(KEY, JSON.stringify(result));
     } catch (error) {
       notifyError(error as unknown as string);
     }
@@ -125,7 +111,7 @@ export const useApiHook = (): {
    * Renames a phantom.
    * @param {string} id - ID of the phantom to rename.
    * @param {string} newName - New name for the phantom.
-   * @returns {Promise<void>} - Promise resolving once the renaming is completed.
+   * @returns {Promise<void>} - Promise resolving once the renaming is completed and the state is updated.
    */
   const renamePhantom = async (id: string, newName: string): Promise<void> => {
     try {
@@ -148,7 +134,7 @@ export const useApiHook = (): {
   /**
    * Duplicates a phantom.
    * @param {string} id - ID of the phantom to duplicate.
-   * @returns {Promise<void>} - Promise resolving once the duplication is completed.
+   * @returns {Promise<void>} - Promise resolving once the duplication is completed and the local storage is updated.
    */
   const duplicatedPhantom = async (id: string): Promise<void> => {
     try {
@@ -166,19 +152,20 @@ export const useApiHook = (): {
   };
 
   /**
-   * Fetches a phantom by ID.
+   * Fetches a phantom by ID and updates the state.
    * @param {string} id - ID of the phantom to fetch.
-   * @returns {Promise<IPhantom | undefined>} - Promise resolving to the fetched phantom or undefined if not found.
+   * @returns {Promise<void>} - Promise resolving once the phantom is fetched and the state is updated.
    */
-  const getPhantomById = async (id: string): Promise<IPhantom | undefined> => {
+  const getPhantomById = async (id: string): Promise<void> => {
     try {
+      let result = phantom;
       const phantomCached = getItem(KEY);
       if (phantomCached) {
-        const phantom = await getPhantomByIdApi(id, JSON.parse(phantomCached));
-        return phantom;
+        result = await getPhantomByIdApi(id, JSON.parse(phantomCached));
+      } else {
+        result = await getPhantomByIdApi(id);
       }
-      const phantom = await getPhantomByIdApi(id);
-      return phantom;
+      setPhantom(result);
     } catch (error) {
       notifyError(error as unknown as string);
     }
@@ -194,8 +181,5 @@ export const useApiHook = (): {
     renamePhantom,
     duplicatedPhantom,
     getPhantomById,
-    setPhantom,
-    setPhantoms,
-    setCategories,
   };
 };

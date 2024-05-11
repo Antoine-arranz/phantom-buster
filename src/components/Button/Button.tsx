@@ -1,10 +1,16 @@
+import { FunctionComponent, ReactNode } from "react";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: string;
+  children?: ReactNode;
   handleOnClick?: () => void;
   className?: string;
 }
 
-const Button = ({ children, handleOnClick, className }: ButtonProps) => {
+const Button: FunctionComponent<ButtonProps> = ({
+  children,
+  handleOnClick,
+  className,
+}) => {
   return (
     <button className={className} onClick={handleOnClick}>
       {children}

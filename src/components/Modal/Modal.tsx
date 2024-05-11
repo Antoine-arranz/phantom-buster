@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, FunctionComponent } from "react";
 import { useClickOutside } from "../../hooks/clickOutside";
 
 interface ModalProps {
@@ -9,7 +9,13 @@ interface ModalProps {
   close: () => void;
 }
 
-const Modal = ({ children, open, close, title, content }: ModalProps) => {
+const Modal: FunctionComponent<ModalProps> = ({
+  children,
+  open,
+  close,
+  title,
+  content,
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(modalRef, () => close());

@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
+import Button from "../Button/Button";
 
 interface FilterButtonProps extends ButtonHTMLAttributes<HTMLUListElement> {
   children: ReactNode;
@@ -13,7 +14,7 @@ const FilterButton = ({
   isActive,
 }: FilterButtonProps) => {
   return (
-    <button className={className} onClick={onClick}>
+    <Button className={className} handleOnClick={onClick}>
       <span>{children} </span>
       {isActive && (
         <input
@@ -22,7 +23,7 @@ const FilterButton = ({
           className='checkbox-primary checkbox checkbox-xs self-center '
         />
       )}
-    </button>
+    </Button>
   );
 };
 

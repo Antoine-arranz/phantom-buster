@@ -4,17 +4,16 @@ export const useClickOutside = (
   ref: React.RefObject<HTMLElement>,
   fn: () => void
 ) => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
+      fn();
+    }
+  };
+
+  const handlePressEsc = (event: KeyboardEvent) => {
+    if (event.key === "Escape") fn();
+  };
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        fn();
-      }
-    };
-
-    const handlePressEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") fn();
-    };
-
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handlePressEsc);
 

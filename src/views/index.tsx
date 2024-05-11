@@ -3,19 +3,21 @@ import Header from "../components/Layout/Header";
 import { BrowserRouter } from "react-router-dom";
 import { Router } from ".././router/router";
 import Toaster from "../components/Toaster/Toaster";
+import { Fragment } from "react/jsx-runtime";
+import Main from "../components/Layout/Main";
 
 function App() {
   return (
-    <div>
+    <Fragment>
       <BrowserRouter>
         <Header></Header>
         <Toaster />
-        <main className='bg-bcg-primary h-full'>
+        <Main>
           <Router />
-        </main>
-      </BrowserRouter>{" "}
-      <Footer></Footer>
-    </div>
+        </Main>
+        <Footer></Footer>
+      </BrowserRouter>
+    </Fragment>
   );
 }
 
