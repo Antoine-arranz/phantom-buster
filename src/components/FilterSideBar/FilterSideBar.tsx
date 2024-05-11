@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { KEY } from "../../hooks/apiHook";
 import createListFromEnum from "../../utils/listFromEnum";
 import Button from "../Button/Button";
-import CategoriesFilter from "../CategoriesFilter/CategoriesFilter";
+import CategoriesFilter from "./CategoriesFilter/CategoriesFilter";
 import SearchBar from "../SearchBar/SearchBar";
 import { useLocalStorage } from "../../hooks/localStorageHook";
 

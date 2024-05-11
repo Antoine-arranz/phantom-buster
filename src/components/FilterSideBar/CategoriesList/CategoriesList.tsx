@@ -1,5 +1,5 @@
 import { HTMLProps, ReactNode } from "react";
-import Button from "../Button/Button";
+import Button from "../../Button/Button";
 
 interface CategoriesListProps extends HTMLProps<HTMLUListElement> {
   children: ReactNode;
