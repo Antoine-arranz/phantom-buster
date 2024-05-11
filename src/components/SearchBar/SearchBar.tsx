@@ -20,7 +20,7 @@ function SearchBar() {
       <input
         value={searchParams.get(SEARCH_KEY) || ""}
         onChange={handleChange}
-        className='pl-5 outline-none rounded-xl w-full text-body-primary font-medium px-2 py-1.5 disabled:text-body-tertiary disabled:placeholder:text-body-tertiary disabled:bg-primary disabled:ring-0 disabled:border-primary disabled:cursor-not-allowed placeholder:italic placeholder:text-body-tertiary placeholder:font-qanelas font-qanelas caret-heading-highlight focus:ring active:ring-0 border-primary focus:border-highlight focus:ring-highlight/20 hover:border-highlight hover:ring hover:ring-highlight/20 autofill:shadow-[0_0_0_100px_white_inset]'
+        className='pl-5 outline-none rounded-xl w-full text-body-primary font-medium px-2 py-1.5  placeholder:italic focus:ring active:ring-0 border-primary hover:border-highlight hover:ring'
         type='text'
         placeholder='Search'
         name='search'

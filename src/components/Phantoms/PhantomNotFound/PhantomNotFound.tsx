@@ -17,7 +17,7 @@ const PhantomNotFound = ({
         {linkToDashboard && (
           <Link
             to={path.dashboard}
-            className='flex m-auto px-2 py-1 text-white  bg-primary rounded-md hover:bg-filter-hover'
+            className='flex m-auto px-2 py-1 text-white bg-primary rounded-md hover:bg-filter-hover'
           >
             Return to the dashboard
           </Link>

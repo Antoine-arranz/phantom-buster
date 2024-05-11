@@ -1,14 +1,14 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { MoreDotsSVG } from "../../Logo/MoreDots";
 import Toggle from "react-toggle";
 import "./phantomCard.css";
 import { IPhantom } from "../../../data/phantoms";
 import Button from "../../Button/Button";
-import Modal from "../../Modal/Modal";
 import { useClickOutside } from "../../../hooks/clickOutside";
 import { notifyError } from "../../../utils/notify";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import PhantomCardModal from "./PhantomCardModal/PhantomCardModal";
+import PhantomCardDropdown from "./PhantomCardDropdown/PhantomCardDropdown";
 
 interface PhantomCardProps {
   phantom: IPhantom;
@@ -106,69 +106,6 @@ const PhantomCard = ({
     duplicatedPhantom(id);
     setToggleMenuOpen(false);
   };
-  const dropDownMenu = (
-    <div className='relative'>
-      <label tabIndex={0} className='' onClick={toggleMenu}>
-        <MoreDotsSVG className='w-4 hover:cursor-pointer' />
-      </label>
-      {isToggleMenuOpen && (
-        <div ref={dropDownRef}>
-          <ul
-            className='shadow-3xl absolute right-2 ml-4 p-4 rounded-md border-red flex flex-col gap-2'
-            tabIndex={0}
-          >
-            <li>
-              <Button handleOnClick={() => handleClickOnRename()}>
-                Rename
-              </Button>
-            </li>
-            <li>
-              <Button handleOnClick={() => handleDuplicatePhantom(phantom.id)}>
-                Duplicate
-              </Button>
-            </li>
-
-            <li>
-              <Button handleOnClick={() => onDeletePhantom(phantom.id)}>
-                Delete
-              </Button>
-            </li>
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-
-  const modalView = (
-    <Modal
-      open={isModalOpen}
-      close={closeModal}
-      title='Edit Phantom name'
-      content='Phantom'
-    >
-      <input
-        className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-primary '
-        type='text'
-        value={inputValue}
-        name='modal'
-        onChange={handleInputChange}
-      />
-      <div className='flex justify-end mt-4 border-1'>
-        <Button
-          handleOnClick={closeModal}
-          className='px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:bg-gray-400'
-        >
-          Cancel
-        </Button>
-        <Button
-          handleOnClick={handleValidateRename}
-          className='ml-4 px-4 py-2 bg-primary text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
-        >
-          OK
-        </Button>
-      </div>
-    </Modal>
-  );
 
   return (
     <div
@@ -177,7 +114,13 @@ const PhantomCard = ({
         className
       )}
     >
-      {modalView}
+      <PhantomCardModal
+        closeModal={closeModal}
+        handleInputChange={handleInputChange}
+        inputValue={inputValue}
+        isModalOpen={isModalOpen}
+        handleValidateRename={handleValidateRename}
+      ></PhantomCardModal>
       <div className='h-2/5 mb-3 flex items-center justify-between hover:cursor-grab'>
         <div className='flex sm:gap-5 flex-wrap'>
           {phantom.manifest.tags.categories.map((category) => (
@@ -189,7 +132,15 @@ const PhantomCard = ({
             </Button>
           ))}
         </div>
-        <span>{dropDownMenu}</span>
+        <PhantomCardDropdown
+          dropDownRef={dropDownRef}
+          handleClickOnRename={handleClickOnRename}
+          isToggleMenuOpen={isToggleMenuOpen}
+          handleDuplicatePhantom={handleDuplicatePhantom}
+          onDeletePhantom={onDeletePhantom}
+          phantomId={phantom.id}
+          toggleMenu={toggleMenu}
+        />
       </div>
       <Link
         to={`/phantom/${phantom.id}`}

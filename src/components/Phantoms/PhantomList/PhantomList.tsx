@@ -79,7 +79,7 @@ const PhantomList = ({
         ))
       ) : (
         <PhantomNotFound
-          message={"No phantom change filter or add a new one"}
+          message={"No phantom found change filter or add a new one"}
         />
       )}
     </Fragment>
