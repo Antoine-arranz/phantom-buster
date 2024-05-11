@@ -1,4 +1,4 @@
-import NavigationLink from "../NavigationLink/NavigationLink";
+import NavigationLink from "./NavigationLink/NavigationLink";
 
 function Navigation() {
   return (

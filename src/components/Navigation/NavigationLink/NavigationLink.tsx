@@ -1,7 +1,7 @@
 import { VariantProps, cva } from "class-variance-authority";
 import { AnchorHTMLAttributes, ReactNode } from "react";
 import { NavLink } from "react-router-dom";
-import path from "../../router/path";
+import path from "../../../router/path";
 
 export interface NavigationLinkProps
   extends AnchorHTMLAttributes<HTMLButtonElement>,
