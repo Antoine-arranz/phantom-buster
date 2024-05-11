@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   deletePhantomApi,
   duplicatePhantomApi,
@@ -13,6 +13,9 @@ import filterPhantomByCategory from "../utils/filterPhantomByCategory";
 import collectCategories from "../utils/collectCategories ";
 import { notifyError } from "../utils/notify";
 import { SearchParams } from "../interfaces/searchParams";
+import { useSearchParams } from "react-router-dom";
+import { SEARCH_KEY } from "../components/SearchBar/SearchBar";
+import { PLATFORMS } from "../components/FilterSideBar/FilterSideBar";
 
 export const KEY = "phantom";
 
@@ -22,7 +25,7 @@ export const KEY = "phantom";
  *   phantoms: IPhantoms | undefined,
  *   phantom: IPhantom | undefined,
  *   categories: string[] | undefined,
- *   getPhantoms: (searchParams?: SearchParams) => Promise<void>,
+ *   getPhantoms: () => Promise<void>,
  *   deletePhantom: (id: string) => Promise<void>,
  *   getCategories: () => Promise<void>,
  *   renamePhantom: (id: string, newName: string) => Promise<void>,
@@ -34,7 +37,7 @@ export const useApiHook = (): {
   phantoms: IPhantoms | undefined;
   phantom: IPhantom | undefined;
   categories: string[] | undefined;
-  getPhantoms: (searchParams?: SearchParams) => Promise<void>;
+  getPhantoms: () => Promise<void>;
   deletePhantom: (id: string) => void;
   getCategories: () => Promise<void>;
   renamePhantom: (id: string, newName: string) => Promise<void>;
@@ -45,16 +48,31 @@ export const useApiHook = (): {
   const [categories, setCategories] = useState<string[]>([]);
   const { setItem, getItem } = useLocalStorage();
   const [phantom, setPhantom] = useState<IPhantom>();
+  const [searchParams] = useSearchParams();
+
+  /**
+   * Executes the getPhantoms function whenever the searchParams state changes.
+   * @returns {void}
+   */
+  useEffect(() => {
+    getPhantoms();
+  }, [searchParams]);
 
   /**
    * Fetches phantoms from the API and updates the state.
-   * @param {SearchParams} [categories={}] - Optional search parameters.
-   * @returns {Promise<void>} - Promise resolving once the phantoms are fetched and the state is updated.
+   * @returns {Promise<void>} - Promise resolving once the operation is completed.
    */
-  const getPhantoms = async (categories: SearchParams = {}): Promise<void> => {
+  const getPhantoms = async (): Promise<void> => {
     try {
       let result = phantoms;
       const phantomCached = getItem(KEY);
+      const platformFilter = searchParams.get(PLATFORMS);
+      const searchFilter = searchParams.get(SEARCH_KEY);
+      const categories: SearchParams = {
+        platform: platformFilter,
+        search: searchFilter,
+      };
+
       if (phantomCached) {
         result = filterPhantomByCategory(JSON.parse(phantomCached), categories);
       } else {

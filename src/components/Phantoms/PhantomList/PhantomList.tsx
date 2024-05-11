@@ -3,9 +3,6 @@ import { IPhantoms } from "../../../data/phantoms";
 import PhantomCard from "../PhantomCard/PhantomCard";
 import Button from "../../Button/Button";
 import { PhantomLogoSVG } from "../../Logo/PhantomBuster";
-import { useSearchParams } from "react-router-dom";
-import { SEARCH_KEY } from "../../SearchBar/SearchBar";
-import { useEffect } from "react";
 import { SearchParams } from "../../../interfaces/searchParams";
 import { notifyError } from "../../../utils/notify";
 import PhantomNotFound from "../PhantomNotFound/PhantomNotFound";
@@ -25,35 +22,20 @@ const PhantomList = ({
   renamePhantom,
   duplicatedPhantom,
 }: PhantomListProps) => {
-  const [searchParams] = useSearchParams();
-
   const onDeletePhantom = async (id: string) => {
     await deletePhantom(id);
-    await retrievePhantomsWithParams();
+    await getPhantoms();
   };
 
   const onRenamePhantom = async (id: string, value: string) => {
     await renamePhantom(id, value);
-    await retrievePhantomsWithParams();
+    await getPhantoms();
   };
 
   const onDuplicatePhantom = async (id: string) => {
     await duplicatedPhantom(id);
-    await retrievePhantomsWithParams();
+    await getPhantoms();
   };
-  const retrievePhantomsWithParams = async () => {
-    const platformFilter = searchParams.get("Platforms");
-    const searchFilter = searchParams.get(SEARCH_KEY);
-
-    await getPhantoms({
-      platform: platformFilter,
-      search: searchFilter,
-    });
-  };
-
-  useEffect(() => {
-    retrievePhantomsWithParams();
-  }, [searchParams]);
 
   return (
     <Fragment>
