@@ -62,7 +62,7 @@ const PhantomList = ({
 
         <Button
           handleOnClick={() => notifyError("Working progress")}
-          className=' flex m-auto mt-4 px-2 py-1 text-white  bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
+          className=' flex m-auto mt-4 px-2 py-1 text-white  bg-primary rounded-md hover:bg-filter-hover'
         >
           Use a new Phantom
         </Button>

@@ -47,7 +47,7 @@ const FilterSideBar = ({ categories }: PhantomListProps) => {
             <h2 className='text-md font-bold'>Filters</h2>
             {searchParams.size !== 0 && (
               <Button
-                className='text-bcg-filter font-bold'
+                className='text-primary font-bold'
                 handleOnClick={() => onClickClearFilters()}
               >
                 Clear filters
@@ -70,7 +70,7 @@ const FilterSideBar = ({ categories }: PhantomListProps) => {
           <CategoriesFilter title='Platforms' categories={categories} />
         )}
         <Button
-          className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-bcg-filter rounded-md hover:bg-bcg-filter-hover'
+          className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-primary rounded-md hover:bg-filter-hover'
           type='submit'
           handleOnClick={onResetStorage}
         >

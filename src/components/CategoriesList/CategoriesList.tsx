@@ -19,7 +19,7 @@ const CategoriesList = ({
         isActive={isActive}
         className={`mt-1 px-3 py-3 h-4 flex items-center ${
           isActive &&
-          "justify-between mt-1 px-3 py-3 flex w-full text-white items-center font-light bg-bcg-filter rounded-md hover:bg-bcg-filter-hover"
+          "justify-between mt-1 px-3 py-3 flex w-full text-white items-center font-light bg-primary rounded-md hover:bg-filter-hover"
         }`}
       >
         {children}

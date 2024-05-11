@@ -21,7 +21,7 @@ const CategoriesFilter = ({ title, categories }: CategoriesFilterProps) => {
   };
   return (
     <div className='mb-4'>
-      <p className='text-sm text-secondary-text font-medium'>{title}</p>
+      <p className='text-sm text-secondary font-medium'>{title}</p>
       <ul>
         {categories.map((categorie: string, index: number) => {
           return (

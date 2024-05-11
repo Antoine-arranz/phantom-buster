@@ -29,7 +29,7 @@ const Modal: FunctionComponent<ModalProps> = ({
       <div ref={modalRef} className='bg-white p-8 rounded-md w-80'>
         <h2 className='font-bold text-xl mb-3'>{title}</h2>
         <p className='mb-2'>{content}</p>
-        <div className='text-lg font-semibold mb-4 border-bcg-filter'>
+        <div className='text-lg font-semibold mb-4 border-primary'>
           {children}
         </div>
       </div>

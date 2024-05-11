@@ -147,7 +147,7 @@ const PhantomCard = ({
       content='Phantom'
     >
       <input
-        className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-bcg-filter '
+        className='rounded-1.5 w-full text-body-primary font-medium px-2 py-1.5 border-2 border-primary '
         type='text'
         value={inputValue}
         name='modal'
@@ -162,7 +162,7 @@ const PhantomCard = ({
         </Button>
         <Button
           handleOnClick={handleValidateRename}
-          className='ml-4 px-4 py-2 bg-bcg-filter text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
+          className='ml-4 px-4 py-2 bg-primary text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
         >
           OK
         </Button>
@@ -173,7 +173,7 @@ const PhantomCard = ({
   return (
     <div
       className={clsx(
-        "bg-bcg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]",
+        "bg-white px-5 flex flex-col shadow-md p-3 rounded-xl w-full hover:shadow-2xl h-[14.625rem]",
         className
       )}
     >
@@ -183,7 +183,7 @@ const PhantomCard = ({
           {phantom.manifest.tags.categories.map((category) => (
             <Button
               key={category}
-              className='border rounded-xl p-3 cursor-default text-bcg-filter font-bold'
+              className='border rounded-xl p-3 cursor-default text-primary font-bold'
             >
               {category}
             </Button>
@@ -195,11 +195,11 @@ const PhantomCard = ({
         to={`/phantom/${phantom.id}`}
         className='h-2/5 mb-3 hover:cursor-pointer'
       >
-        <span className='text-secondary-text'>{phantom.script}</span>
+        <span className='text-secondary'>{phantom.script}</span>
         <h2 className='font-bold text-xl'>{phantom.name}</h2>
       </Link>
       <div className='h-2/5 flex items-center justify-between space-x-1 '>
-        <div className='flex gap-5 text-secondary-text'>
+        <div className='flex gap-5 text-secondary'>
           <Toggle
             className='toggle'
             defaultChecked={isLaunched}
@@ -207,7 +207,7 @@ const PhantomCard = ({
             icons={false}
             id='cheese-status'
           />
-          <p className={` ${isLaunched ? "text-bcg-filter font-bold" : ""}`}>
+          <p className={` ${isLaunched ? "text-primary font-bold" : ""}`}>
             {isLaunched ? "on" : "off"}
           </p>
           <p>{phantom.launchType}</p>
