@@ -11,7 +11,7 @@ const PhantomNotFound = ({
   linkToDashboard,
 }: PhantomNotFoundProps) => {
   return (
-    <div className=' bg-base-200 flex justify-center items-center'>
+    <div className='flex justify-center items-center'>
       <div className='max-w-md flex-col flex gap-10'>
         <h1 className='text-3xl font-bold'>{message}</h1>
         {linkToDashboard && (

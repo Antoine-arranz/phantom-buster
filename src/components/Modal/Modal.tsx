@@ -1,5 +1,5 @@
 import { ReactNode, useRef, FunctionComponent } from "react";
-import { useClickOutside } from "../../hooks/clickOutside";
+import { useClickOutside } from "../../hooks/clickOutsideHook";
 
 interface ModalProps {
   title: string;

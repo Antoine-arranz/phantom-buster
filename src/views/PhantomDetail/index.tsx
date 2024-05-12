@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useApiHook } from "../../hooks/apiHook";
+import { usePhantomsApi } from "../../hooks/usePhantomsApiHook";
 import { useParams } from "react-router-dom";
 import PhantomCard from "../../components/Phantoms/PhantomCard/PhantomCard";
 import PhantomNotFound from "../../components/Phantoms/PhantomNotFound/PhantomNotFound";
@@ -15,7 +15,7 @@ const PhantomDetail = () => {
     duplicatedPhantom,
     deletePhantom,
     renamePhantom,
-  } = useApiHook();
+  } = usePhantomsApi();
   const params = useParams<PhantomDetailParams>();
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   deletePhantomApi,
   duplicatePhantomApi,
@@ -20,7 +20,7 @@ import { PLATFORMS } from "../components/FilterSideBar/FilterSideBar";
 export const KEY = "phantom";
 
 /**
- * Custom hook for interacting with the API.
+ * Custom hook for interacting with the API phantoms.
  * @returns {{
  *   phantoms: IPhantoms | undefined,
  *   phantom: IPhantom | undefined,
@@ -33,7 +33,7 @@ export const KEY = "phantom";
  *   getPhantomById: (id: string) => Promise<void>,
  * }} - Object containing the hook's results and functions.
  */
-export const useApiHook = (): {
+export const usePhantomsApi = (): {
   phantoms: IPhantoms | undefined;
   phantom: IPhantom | undefined;
   categories: string[] | undefined;
@@ -51,14 +51,6 @@ export const useApiHook = (): {
   const [searchParams] = useSearchParams();
 
   /**
-   * Executes the getPhantoms function whenever the searchParams state changes.
-   * @returns {void}
-   */
-  useEffect(() => {
-    getPhantoms();
-  }, [searchParams]);
-
-  /**
    * Fetches phantoms from the API and updates the state.
    * @returns {Promise<void>} - Promise resolving once the operation is completed.
    */
@@ -68,16 +60,18 @@ export const useApiHook = (): {
       const phantomCached = getItem(KEY);
       const platformFilter = searchParams.get(PLATFORMS);
       const searchFilter = searchParams.get(SEARCH_KEY);
-      const categories: SearchParams = {
+      const filters: SearchParams = {
         platform: platformFilter,
         search: searchFilter,
       };
 
       if (phantomCached) {
-        result = filterPhantomByCategory(JSON.parse(phantomCached), categories);
+        result = filterPhantomByCategory(JSON.parse(phantomCached), filters);
       } else {
-        result = await getPhantomsApi(categories);
-        setItem(KEY, JSON.stringify(result));
+        const phantoms = await getPhantomsApi();
+        result = await getPhantomsApi(filters);
+        await getCategories();
+        setItem(KEY, JSON.stringify(phantoms));
       }
       setPhantoms(result);
     } catch (error) {

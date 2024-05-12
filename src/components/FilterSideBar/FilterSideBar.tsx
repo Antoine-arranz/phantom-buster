@@ -1,10 +1,8 @@
 import { useSearchParams } from "react-router-dom";
-import { KEY } from "../../hooks/apiHook";
 import createListFromEnum from "../../utils/listFromEnum";
 import Button from "../Button/Button";
 import CategoriesFilter from "./CategoriesFilter/CategoriesFilter";
 import SearchBar from "../SearchBar/SearchBar";
-import { useLocalStorage } from "../../hooks/localStorageHook";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -20,17 +18,13 @@ enum Activity {
 
 interface PhantomListProps {
   categories: string[] | undefined;
+  onResetStorage: () => void;
 }
 
 export const PLATFORMS = "Platforms";
 
-const FilterSideBar = ({ categories }: PhantomListProps) => {
+const FilterSideBar = ({ categories, onResetStorage }: PhantomListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { removeItem } = useLocalStorage();
-
-  const onResetStorage = () => {
-    removeItem(KEY);
-  };
 
   const onClickClearFilters = () => {
     setSearchParams("");

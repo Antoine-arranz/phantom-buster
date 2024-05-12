@@ -3,7 +3,7 @@ import Toggle from "react-toggle";
 import "./phantomCard.css";
 import { IPhantom } from "../../../data/phantoms";
 import Button from "../../Button/Button";
-import { useClickOutside } from "../../../hooks/clickOutside";
+import { useClickOutside } from "../../../hooks/clickOutsideHook";
 import { notifyError } from "../../../utils/notify";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
