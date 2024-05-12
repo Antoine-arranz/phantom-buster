@@ -3,21 +3,24 @@ import data from "../data/phantoms.json";
 import { SearchParams } from "../interfaces/searchParams";
 import collectCategories from "../utils/collectCategories ";
 import filterPhantomByCategory from "../utils/filterPhantomByCategory";
+import { findByKey } from "../utils/findByKey";
 import { generateUniqueId } from "../utils/generateUniqueId";
 
 export const getPhantomsApi = (
   categories?: SearchParams
 ): Promise<IPhantoms> => {
   return new Promise((resolve, reject) => {
-    try {
-      let phantomsData = data as IPhantoms;
-      if (categories) {
-        phantomsData = filterPhantomByCategory(phantomsData, categories);
+    setTimeout(() => {
+      try {
+        let phantomsData = data as IPhantoms;
+        if (categories) {
+          phantomsData = filterPhantomByCategory(phantomsData, categories);
+        }
+        resolve(phantomsData);
+      } catch (error) {
+        reject(error);
       }
-      resolve(phantomsData);
-    } catch (error) {
-      reject(error);
-    }
+    }, 1000);
   });
 };
 
@@ -98,12 +101,13 @@ export const getPhantomByIdApi = (
   phantoms: IPhantoms = data as IPhantoms
 ): Promise<IPhantom> => {
   return new Promise((resolve, reject) => {
-    const foundPhantom = phantoms.find((phantom) => phantom.id === id);
-
-    if (foundPhantom) {
-      resolve(foundPhantom);
-    } else {
-      reject(new Error(`Phantom with ID ${id} not found`));
-    }
+    setTimeout(() => {
+      const foundPhantom = findByKey(phantoms, id, "id");
+      if (foundPhantom) {
+        resolve(foundPhantom);
+      } else {
+        reject(new Error(`Phantom with ID ${id} not found`));
+      }
+    }, 1000);
   });
 };

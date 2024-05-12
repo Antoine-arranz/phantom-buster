@@ -6,9 +6,11 @@ import { PhantomLogoSVG } from "../../Logo/PhantomBuster";
 import { SearchParams } from "../../../interfaces/searchParams";
 import { notifyError } from "../../../utils/notify";
 import PhantomNotFound from "../PhantomNotFound/PhantomNotFound";
+import Loader from "../../Loader/Loader";
 
 interface PhantomListProps {
-  phantoms: IPhantoms;
+  phantoms: IPhantoms | undefined;
+  loading: boolean;
   getPhantoms: (searchParams?: SearchParams) => Promise<void>;
   deletePhantom: (id: string) => Promise<void>;
   renamePhantom: (id: string, value: string) => Promise<void>;
@@ -17,6 +19,7 @@ interface PhantomListProps {
 
 const PhantomList = ({
   phantoms,
+  loading,
   getPhantoms,
   deletePhantom,
   renamePhantom,
@@ -49,7 +52,9 @@ const PhantomList = ({
           Use a new Phantom
         </Button>
       </div>
-      {phantoms && phantoms.length ? (
+      {loading ? (
+        <Loader />
+      ) : phantoms && phantoms.length ? (
         phantoms.map((phantom, index) => (
           <PhantomCard
             renamePhantom={onRenamePhantom}

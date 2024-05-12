@@ -3,6 +3,7 @@ import { usePhantomsApi } from "../../hooks/phantomsApiHook";
 import { useParams } from "react-router-dom";
 import PhantomCard from "../../components/Phantoms/PhantomCard/PhantomCard";
 import PhantomNotFound from "../../components/Phantoms/PhantomNotFound/PhantomNotFound";
+import Loader from "../../components/Loader/Loader";
 
 type PhantomDetailParams = {
   id: string;
@@ -11,6 +12,7 @@ type PhantomDetailParams = {
 const PhantomDetail = () => {
   const {
     phantom,
+    loading,
     getPhantomById,
     duplicatedPhantom,
     deletePhantom,
@@ -35,7 +37,9 @@ const PhantomDetail = () => {
   };
   return (
     <div className='bg-main-bcg-color  p-10 h-[calc(100vh-200px)]'>
-      {phantom ? (
+      {loading ? (
+        <Loader />
+      ) : phantom ? (
         <PhantomCard
           className='mt-20'
           phantom={phantom}

@@ -6,7 +6,7 @@ import Toaster from "../components/Toaster/Toaster";
 import { Fragment } from "react/jsx-runtime";
 import Main from "../components/Layout/Main";
 
-function App() {
+const App = () => {
   return (
     <Fragment>
       <BrowserRouter>
@@ -19,6 +19,6 @@ function App() {
       </BrowserRouter>
     </Fragment>
   );
-}
+};
 
 export default App;
