@@ -9,6 +9,7 @@ const Dashboard = () => {
   const {
     phantoms,
     categories,
+    loading,
     getPhantoms,
     deletePhantom,
     getCategories,
@@ -41,19 +42,20 @@ const Dashboard = () => {
       <h1 className='text-3xl font-extrabold'>Dashboard</h1>
       <div className='mt-9 flex flex-col lg:flex-row lg:gap-10'>
         <FilterSideBar
+          loading={loading}
           categories={categories}
           onResetStorage={onResetStorage}
         />
+
         <div className='flex flex-col gap-10 w-full'>
-          {phantoms && (
-            <PhantomList
-              phantoms={phantoms}
-              getPhantoms={getPhantoms}
-              deletePhantom={handleDeletePhantom}
-              renamePhantom={renamePhantom}
-              duplicatedPhantom={duplicatedPhantom}
-            />
-          )}
+          <PhantomList
+            loading={loading}
+            phantoms={phantoms}
+            getPhantoms={getPhantoms}
+            deletePhantom={handleDeletePhantom}
+            renamePhantom={renamePhantom}
+            duplicatedPhantom={duplicatedPhantom}
+          />
         </div>
       </div>
     </div>

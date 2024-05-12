@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 
 export const SEARCH_KEY = "search";
 
-function SearchBar() {
+const SearchBar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +27,6 @@ function SearchBar() {
       />
     </div>
   );
-}
+};
 
 export default SearchBar;

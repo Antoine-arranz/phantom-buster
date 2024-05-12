@@ -16,6 +16,7 @@ import { SearchParams } from "../interfaces/searchParams";
 import { useSearchParams } from "react-router-dom";
 import { SEARCH_KEY } from "../components/SearchBar/SearchBar";
 import { PLATFORMS } from "../components/FilterSideBar/FilterSideBar";
+import { findByKey } from "../utils/findByKey";
 
 export const KEY = "phantom";
 
@@ -24,6 +25,7 @@ export const KEY = "phantom";
  * @returns {{
  *   phantoms: IPhantoms | undefined,
  *   phantom: IPhantom | undefined,
+ *   loading: boolean
  *   categories: string[] | undefined,
  *   getPhantoms: () => Promise<void>,
  *   deletePhantom: (id: string) => Promise<void>,
@@ -37,6 +39,7 @@ export const usePhantomsApi = (): {
   phantoms: IPhantoms | undefined;
   phantom: IPhantom | undefined;
   categories: string[] | undefined;
+  loading: boolean;
   getPhantoms: () => Promise<void>;
   deletePhantom: (id: string) => void;
   getCategories: () => Promise<void>;
@@ -44,6 +47,7 @@ export const usePhantomsApi = (): {
   duplicatedPhantom: (id: string) => Promise<void>;
   getPhantomById: (id: string) => Promise<void>;
 } => {
+  const [loading, setLoading] = useState(false);
   const [phantoms, setPhantoms] = useState<IPhantoms>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const { setItem, getItem } = useLocalStorage();
@@ -56,6 +60,7 @@ export const usePhantomsApi = (): {
    */
   const getPhantoms = async (): Promise<void> => {
     try {
+      setLoading(true);
       let result = phantoms;
       const phantomCached = getItem(KEY);
       const platformFilter = searchParams.get(PLATFORMS);
@@ -74,8 +79,10 @@ export const usePhantomsApi = (): {
         setItem(KEY, JSON.stringify(phantoms));
       }
       setPhantoms(result);
+      setLoading(false);
     } catch (error) {
       notifyError(error as unknown as string);
+      setLoading(false);
     }
   };
 
@@ -85,16 +92,18 @@ export const usePhantomsApi = (): {
    */
   const getCategories = async (): Promise<void> => {
     try {
+      setLoading(true);
       let newCategories = categories;
       const phantomCached = getItem(KEY);
-
       if (phantomCached) {
         newCategories = collectCategories(JSON.parse(phantomCached));
       } else {
         newCategories = await getCategoriesApi();
       }
       setCategories(newCategories);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       notifyError(error as unknown as string);
     }
   };
@@ -106,6 +115,7 @@ export const usePhantomsApi = (): {
    */
   const deletePhantom = async (id: string): Promise<void> => {
     try {
+      setLoading(true);
       let result = phantoms;
       const phantomCached = getItem(KEY);
       if (phantomCached) {
@@ -114,7 +124,9 @@ export const usePhantomsApi = (): {
         result = await deletePhantomApi(id);
       }
       setItem(KEY, JSON.stringify(result));
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       notifyError(error as unknown as string);
     }
   };
@@ -127,6 +139,7 @@ export const usePhantomsApi = (): {
    */
   const renamePhantom = async (id: string, newName: string): Promise<void> => {
     try {
+      setLoading(true);
       const phantomCached = getItem(KEY);
       if (phantomCached) {
         const phantoms = await renamePhantomApi(
@@ -138,7 +151,9 @@ export const usePhantomsApi = (): {
           setItem(KEY, JSON.stringify(phantoms));
         }
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       notifyError(error as unknown as string);
     }
   };
@@ -150,6 +165,7 @@ export const usePhantomsApi = (): {
    */
   const duplicatedPhantom = async (id: string): Promise<void> => {
     try {
+      setLoading(true);
       const phantomCached = getItem(KEY);
       if (phantomCached) {
         const phantoms = await duplicatePhantomApi(
@@ -158,7 +174,9 @@ export const usePhantomsApi = (): {
         );
         setItem(KEY, JSON.stringify(phantoms));
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       notifyError(error as unknown as string);
     }
   };
@@ -170,15 +188,18 @@ export const usePhantomsApi = (): {
    */
   const getPhantomById = async (id: string): Promise<void> => {
     try {
+      setLoading(true);
       let result = phantom;
       const phantomCached = getItem(KEY);
       if (phantomCached) {
-        result = await getPhantomByIdApi(id, JSON.parse(phantomCached));
+        result = findByKey(JSON.parse(phantomCached), id, "id");
       } else {
         result = await getPhantomByIdApi(id);
       }
       setPhantom(result);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       setPhantom(undefined);
       notifyError(error as unknown as string);
     }
@@ -188,6 +209,7 @@ export const usePhantomsApi = (): {
     phantoms,
     categories,
     phantom,
+    loading,
     getPhantoms,
     deletePhantom,
     getCategories,

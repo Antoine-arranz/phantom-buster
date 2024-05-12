@@ -3,6 +3,7 @@ import createListFromEnum from "../../utils/listFromEnum";
 import Button from "../Button/Button";
 import CategoriesFilter from "./CategoriesFilter/CategoriesFilter";
 import SearchBar from "../SearchBar/SearchBar";
+import Loader from "../Loader/Loader";
 
 enum LaunchType {
   Automatic = "Automatic",
@@ -18,12 +19,17 @@ enum Activity {
 
 interface PhantomListProps {
   categories: string[] | undefined;
+  loading: boolean;
   onResetStorage: () => void;
 }
 
 export const PLATFORMS = "Platforms";
 
-const FilterSideBar = ({ categories, onResetStorage }: PhantomListProps) => {
+const FilterSideBar = ({
+  categories,
+  loading,
+  onResetStorage,
+}: PhantomListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onClickClearFilters = () => {
@@ -60,8 +66,13 @@ const FilterSideBar = ({ categories, onResetStorage }: PhantomListProps) => {
           <CategoriesFilter title='Activity' categories={activityCategories} />
         )}
 
-        {categories && categories.length > 0 && (
-          <CategoriesFilter title='Platforms' categories={categories} />
+        {loading ? (
+          <Loader />
+        ) : (
+          categories &&
+          categories.length > 0 && (
+            <CategoriesFilter title='Platforms' categories={categories} />
+          )
         )}
         <Button
           className='h-4 flex items-center justify-center mt-1 px-3 py-3 w-full text-white  font-light bg-primary rounded-md hover:bg-filter-hover'
