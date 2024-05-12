@@ -5,7 +5,7 @@ interface MainProps {
 }
 
 function Main(props: MainProps) {
-  return <div className='bg-background-color h-full'>{props.children}</div>;
+  return <div className='bg-main-bcg-color h-full'>{props.children}</div>;
 }
 
 export default Main;

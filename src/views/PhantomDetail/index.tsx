@@ -34,7 +34,7 @@ const PhantomDetail = () => {
     await getPhantomById(id);
   };
   return (
-    <div className='bg-background-color  p-10 h-[calc(100vh-200px)]'>
+    <div className='bg-main-bcg-color  p-10 h-[calc(100vh-200px)]'>
       {phantom ? (
         <PhantomCard
           className='mt-20'
