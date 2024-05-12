@@ -1,16 +1,16 @@
 # Technical test Phantom Buster ARRANZ Antoine
 
-## Basic feature:
+## Basic feature :
 
 - List of phantoms
 - Categories filter with persistance by URL
 - Link to a detailed view of each Phantom,
 
-## Feature that will greatly enhance the project
+## Feature that will greatly enhance the project :
 
 - The logo is animated to move as if it were a real ghost
 
-## Technologies
+## Technologies :
 
 This project use :
 
@@ -21,10 +21,10 @@ This project use :
 - react-toastify for the toaster
 - react-toggle for the toggle
 
-## Setup
+## Setup :
 
 `npm install`
 
-## Starting
+## Starting :
 
 `npm run dev`
