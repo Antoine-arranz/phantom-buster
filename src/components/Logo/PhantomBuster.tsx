@@ -19,6 +19,7 @@ const PhantomLogoSVG = ({ size = 28, className = "" }: SvgProps) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      //Generate numbers between -5 and 5
       const randomX = Math.random() * 10 - 5;
       const randomY = Math.random() * 10 - 5;
       const horizontalDirection =
