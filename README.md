@@ -3,7 +3,7 @@
 ## Basic feature:
 
 - List of phantoms
-- Categories filter wither persistance by URL
+- Categories filter with persistance by URL
 - Link to a detailed view of each Phantom,
 
 ## Feature that will greatly enhance the project
