@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { usePhantomsApi } from "../../hooks/usePhantomsApiHook";
+import { usePhantomsApi } from "../../hooks/phantomsApiHook";
 import { useParams } from "react-router-dom";
 import PhantomCard from "../../components/Phantoms/PhantomCard/PhantomCard";
 import PhantomNotFound from "../../components/Phantoms/PhantomNotFound/PhantomNotFound";

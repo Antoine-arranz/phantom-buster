@@ -179,6 +179,7 @@ export const usePhantomsApi = (): {
       }
       setPhantom(result);
     } catch (error) {
+      setPhantom(undefined);
       notifyError(error as unknown as string);
     }
   };

@@ -1,6 +1,6 @@
 import PhantomList from "../../components/Phantoms/PhantomList/PhantomList";
 import FilterSideBar from "../../components/FilterSideBar/FilterSideBar";
-import { KEY, usePhantomsApi } from "../../hooks/usePhantomsApiHook";
+import { KEY, usePhantomsApi } from "../../hooks/phantomsApiHook";
 import { useEffect } from "react";
 import { useLocalStorage } from "../../hooks/localStorageHook";
 import { useSearchParams } from "react-router-dom";
