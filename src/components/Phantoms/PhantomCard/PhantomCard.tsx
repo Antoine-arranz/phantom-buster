@@ -44,19 +44,6 @@ const PhantomCard = ({
       .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (timeRemain > 0) {
-        setTimeRemain(timeRemain - 1);
-      } else {
-        if (phantom.nextLaunchIn) {
-          setTimeRemain(phantom.nextLaunchIn);
-        }
-      }
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [timeRemain]);
-
   const toggleMenu = () => {
     setToggleMenuOpen(!isToggleMenuOpen);
   };
@@ -95,7 +82,6 @@ const PhantomCard = ({
   const handleValidateRename = async () => {
     if (inputValue) {
       renamePhantom(phantom.id, inputValue);
-      setInputValue(inputValue);
       closeModal();
       return;
     }
@@ -106,6 +92,23 @@ const PhantomCard = ({
     duplicatedPhantom(id);
     setToggleMenuOpen(false);
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (timeRemain > 0) {
+        setTimeRemain(timeRemain - 1);
+      } else {
+        if (phantom.nextLaunchIn) {
+          setTimeRemain(phantom.nextLaunchIn);
+        }
+      }
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [timeRemain]);
+
+  useEffect(() => {
+    setInputValue(phantom.name);
+  }, [phantom.name]);
 
   return (
     <div
